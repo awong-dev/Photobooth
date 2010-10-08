@@ -10,6 +10,7 @@
 		1C4F0B7A11F6D18D0082EC5D /* ImageCaptureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C4F0B7911F6D18D0082EC5D /* ImageCaptureCore.framework */; };
 		1C4F0C0611FCB90F0082EC5D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C4F0C0511FCB90F0082EC5D /* Quartz.framework */; };
 		1C4F0C0811FCB90F0082EC5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C4F0C0711FCB90F0082EC5D /* QuartzCore.framework */; };
+		1CB8C6F91259291400DD851D /* ImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB8C6F81259291400DD851D /* ImageInfo.m */; };
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* PhotoboothAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* PhotoboothAppDelegate.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
@@ -24,6 +25,8 @@
 		1C4F0B7911F6D18D0082EC5D /* ImageCaptureCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageCaptureCore.framework; path = /System/Library/Frameworks/ImageCaptureCore.framework; sourceTree = "<absolute>"; };
 		1C4F0C0511FCB90F0082EC5D /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		1C4F0C0711FCB90F0082EC5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		1CB8C6F71259291400DD851D /* ImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageInfo.h; sourceTree = "<group>"; };
+		1CB8C6F81259291400DD851D /* ImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageInfo.m; sourceTree = "<group>"; };
 		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		256AC3D80F4B6AC300CF3369 /* PhotoboothAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoboothAppDelegate.h; sourceTree = "<group>"; };
 		256AC3D90F4B6AC300CF3369 /* PhotoboothAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoboothAppDelegate.m; sourceTree = "<group>"; };
@@ -55,6 +58,8 @@
 			children = (
 				256AC3D80F4B6AC300CF3369 /* PhotoboothAppDelegate.h */,
 				256AC3D90F4B6AC300CF3369 /* PhotoboothAppDelegate.m */,
+				1CB8C6F71259291400DD851D /* ImageInfo.h */,
+				1CB8C6F81259291400DD851D /* ImageInfo.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -185,6 +190,7 @@
 			files = (
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				256AC3DA0F4B6AC300CF3369 /* PhotoboothAppDelegate.m in Sources */,
+				1CB8C6F91259291400DD851D /* ImageInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
