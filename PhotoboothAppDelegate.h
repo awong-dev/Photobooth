@@ -25,6 +25,7 @@ enum CaputreState {
   IKImageView* mainImage;
   IKImageBrowserView *browserView;
   NSTextField *statusText;
+  NSButton *printButton;
 
   // Preferences Sheet Elements.
   NSWindow *preferencesSheet;
@@ -38,6 +39,8 @@ enum CaputreState {
   enum CaputreState state;
   NSTimer* cameraResetWatchdog;  // Resets to ready if camera is taking too long.
   NSUserDefaults* preferences;
+  SEL printSheetDidEndSelector;
+  NSPrintInfo *printInfo;
   
   // Camera search state.
   ICDeviceBrowser* deviceBrowser;
@@ -49,6 +52,7 @@ enum CaputreState {
 @property(retain, nonatomic) IBOutlet IKImageView *mainImage;
 @property(retain, nonatomic) IBOutlet IKImageBrowserView *browserView;
 @property(retain, nonatomic) IBOutlet NSTextField *statusText;
+@property(retain, nonatomic) IBOutlet NSButton *printButton;
 
 // Preferences sheet stuff.
 @property(retain, nonatomic) IBOutlet NSWindow *preferencesSheet;
@@ -64,8 +68,9 @@ enum CaputreState {
 - (IBAction)scrollBrowseLeft:(id)pId;
 - (IBAction)scrollBrowseRight:(id)pId;
 - (IBAction)print:(id)pId;
-- (IBAction)showEffects:(id)pId;
 - (IBAction)showPageLayout:(id)pId;
+- (IBAction)showPrintPanel:(id)pId;
+- (IBAction)resetPrintInfo:(id)pId;
 
 // Preferences Sheetl Actions.
 - (IBAction)savePreferences:(id)pId;

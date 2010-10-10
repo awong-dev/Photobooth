@@ -17,6 +17,7 @@
 @synthesize mainImage;
 @synthesize browserView;
 @synthesize statusText;
+@synthesize printButton;
 
 @synthesize preferencesSheet;
 @synthesize selectedImagesDirectory;
@@ -26,7 +27,7 @@
 @synthesize defaultImage;
 @synthesize imageList;
 
-NSString* kPrintInfoPref = @"UserPrintInfo";
+NSString* kPrintInfoPref = @"UserPrintInfoRaw";
 NSString* kImageDirectoryPref = @"UserImageDirectory";
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed: (NSApplication *)sender
@@ -42,7 +43,8 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
       [[ImageInfo alloc] initWithPath:
           [NSHomeDirectory() stringByAppendingPathComponent:@"marmalade.png"]];
     imageList = [[NSMutableArray alloc] init];
-    state = kUninitialized;
+    printSheetDidEndSelector =
+        @selector(printSheetDidEnd:returnCode:contextInfo:);
   }
   return self;
 }
@@ -55,12 +57,19 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   NSData* defaultPrintInfo = [preferences dataForKey:kPrintInfoPref];
   NSString* defaultImageDirectory =
       [preferences objectForKey:kImageDirectoryPref];
+  printInfo =
+      [NSUnarchiver unarchiveObjectWithData:defaultPrintInfo];
   
-  if (defaultPrintInfo != nil) {
-    NSDictionary* printInfoPrefs =
-        [NSUnarchiver unarchiveObjectWithData:defaultPrintInfo];
-    [NSPrintInfo setSharedPrintInfo:
-        [[NSPrintInfo alloc] initWithDictionary:printInfoPrefs]];
+  if (printInfo == nil) {
+    printInfo = [NSPrintInfo sharedPrintInfo];
+    [printInfo setTopMargin:0];
+    [printInfo setLeftMargin:0];
+    [printInfo setRightMargin:0];
+    [printInfo setBottomMargin:0];
+    [printInfo setVerticalPagination:NSFitPagination];
+    [printInfo setHorizontalPagination:NSFitPagination];
+  } else {
+    [NSPrintInfo setSharedPrintInfo:printInfo]; 
   }
   if (defaultImageDirectory == nil) {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSPicturesDirectory,
@@ -144,33 +153,40 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
                                                size:imageSize];
   NSRect frameSize = NSMakeRect(0, 0, imageSize.width, imageSize.height);
   NSImageView* printableView = [[NSImageView alloc] initWithFrame:frameSize];
+  // TODO(ajwong): Use the image file directly to preserve color profile?
   [printableView setImage:image];
 
-  // Allow this to be configured in the diagloue instead.
-  NSPrintInfo* printInfo = [NSPrintInfo sharedPrintInfo];
-  [printInfo setTopMargin:0];
-  [printInfo setLeftMargin:0];
-  [printInfo setRightMargin:0];
-  [printInfo setBottomMargin:0];
-  [printInfo setVerticalPagination:NSFitPagination];
-  [printInfo setHorizontalPagination:NSFitPagination];
-  
   NSPrintOperation *op =
-     [NSPrintOperation printOperationWithView:printableView];
-//  [op setShowsPrintPanel:NO];
-  [op setCanSpawnSeparateThread:YES];
-  [op runOperation];
+      [NSPrintOperation printOperationWithView:printableView
+                                     printInfo:printInfo];
+  if (pId == printButton) {
+    [op setShowsPrintPanel:NO];
+  }
+  // TODO(ajwong): Set the print job title here.
+  [op runOperationModalForWindow:window
+                        delegate:self
+                  didRunSelector:@selector(printOperationDidRun:success:contextInfo:)
+                      contextInfo:NULL];
 }
 
-- (IBAction)showEffects:(id)pId {
-}
-
-- (void)pageLayoutDidEnd:(NSPageLayout *)pageLayout
+- (void)printSheetDidEnd:(id)sheet
               returnCode:(int)returnCode
              contextInfo:(void *)contextInfo {
   if (returnCode == NSOKButton) {
     [preferences setObject:
-        [NSArchiver archivedDataWithRootObject:[[pageLayout printInfo] dictionary]]
+        [NSArchiver archivedDataWithRootObject:[sheet printInfo]]
+                    forKey:kPrintInfoPref];
+    [preferences synchronize];
+  }
+}
+
+- (void)printOperationDidRun:(NSPrintOperation *)op
+                     success:(BOOL)success 
+                 contextInfo:(void *)contextInfo {
+  if (success) {
+    printInfo = [[op printInfo] retain];
+    [preferences setObject:
+        [NSArchiver archivedDataWithRootObject:printInfo]
                     forKey:kPrintInfoPref];
     [preferences synchronize];
   }
@@ -178,11 +194,31 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 
 - (IBAction)showPageLayout:(id)pId {
   NSPageLayout *pageLayout = [NSPageLayout pageLayout];
-  [pageLayout beginSheetWithPrintInfo:[NSPrintInfo sharedPrintInfo]
+  [pageLayout beginSheetWithPrintInfo:printInfo
                        modalForWindow:window
                              delegate:self
-                       didEndSelector:@selector(pageLayoutDidEnd:returnCode:contextInfo:)
+                       didEndSelector:printSheetDidEndSelector
                           contextInfo:nil];
+}
+
+- (IBAction)showPrintPanel:(id)pId {
+  NSPrintPanel *printPanel = [NSPrintPanel printPanel];
+  [printPanel beginSheetWithPrintInfo:printInfo
+                       modalForWindow:window
+                             delegate:self
+                       didEndSelector:printSheetDidEndSelector
+                          contextInfo:nil];
+}
+
+- (IBAction)resetPrintInfo:(id)pId {
+  printInfo = [[NSPrintInfo alloc] initWithDictionary:[NSDictionary dictionary]];
+  [NSPrintInfo setSharedPrintInfo: printInfo];
+  [printInfo setTopMargin:0];
+  [printInfo setLeftMargin:0];
+  [printInfo setRightMargin:0];
+  [printInfo setBottomMargin:0];
+  [printInfo setVerticalPagination:NSFitPagination];
+  [printInfo setHorizontalPagination:NSFitPagination];
 }
 
 //
