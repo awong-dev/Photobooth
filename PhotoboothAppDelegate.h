@@ -65,12 +65,11 @@ enum CaputreState {
 
 // UI Actions.
 - (IBAction)takePicture:(id)pId;
-- (IBAction)scrollBrowseLeft:(id)pId;
-- (IBAction)scrollBrowseRight:(id)pId;
 - (IBAction)print:(id)pId;
 - (IBAction)showPageLayout:(id)pId;
 - (IBAction)showPrintPanel:(id)pId;
 - (IBAction)resetPrintInfo:(id)pId;
+- (IBAction)resetMarginsPagination:(id)pId;
 
 // Preferences Sheetl Actions.
 - (IBAction)savePreferences:(id)pId;

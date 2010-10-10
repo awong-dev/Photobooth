@@ -60,12 +60,7 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   
   if (printInfo == nil) {
     printInfo = [NSPrintInfo sharedPrintInfo];
-    [printInfo setTopMargin:0];
-    [printInfo setLeftMargin:0];
-    [printInfo setRightMargin:0];
-    [printInfo setBottomMargin:0];
-    [printInfo setVerticalPagination:NSFitPagination];
-    [printInfo setHorizontalPagination:NSFitPagination];
+    [self resetPrintInfo:nil];
   } else {
     [NSPrintInfo setSharedPrintInfo:printInfo]; 
   }
@@ -133,18 +128,6 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
                          retain];
 }
 
-- (IBAction)scrollBrowseLeft:(id)pId {
-  NSIndexSet *visibleIndexes = [browserView visibleItemIndexes];
-  [browserView scrollIndexToVisible:[visibleIndexes firstIndex]];
-  [browserView setNeedsDisplay:YES];
-}
-
-- (IBAction)scrollBrowseRight:(id)pId {
-  NSIndexSet *visibleIndexes = [browserView visibleItemIndexes];
-  [browserView scrollIndexToVisible:[visibleIndexes lastIndex]];
-  [browserView setNeedsDisplay:YES];
-}
-
 - (IBAction)print:(id)pId {
   // If the image has edits, save to disk.
   // Print the main image.  The IKImageView does not seem to support printing
@@ -156,11 +139,17 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   ImageInfo* imageInfo = [self imageBrowser:browserView
                                 itemAtIndex:[indexes firstIndex]];
   NSImage* image = [[NSImage alloc] initByReferencingURL:[imageInfo url]];
-  // TODO(ajwong): Should this use paper size here?
   NSSize imageSize = [image size];
   NSRect frameSize = NSMakeRect(0, 0, imageSize.width, imageSize.height);
   NSImageView* printableView = [[NSImageView alloc] initWithFrame:frameSize];
   [printableView setImage:image];
+
+  // Force orientation here.
+  if (imageSize.width > imageSize.height) {
+    [printInfo setOrientation:NSLandscapeOrientation];
+  } else {
+    [printInfo setOrientation:NSPortraitOrientation];
+  }
 
   NSPrintOperation *op =
       [NSPrintOperation printOperationWithView:printableView
@@ -168,7 +157,8 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   if (pId == printButton) {
     [op setShowsPrintPanel:NO];
   }
-  // TODO(ajwong): Set the print job title here.
+  [op setJobTitle:
+      [[NSString alloc] initWithFormat:@"Photobotoh: %@", [[imageInfo url] path]]];  
   [op runOperationModalForWindow:window
                         delegate:self
                   didRunSelector:@selector(printOperationDidRun:success:contextInfo:)
@@ -219,12 +209,18 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 - (IBAction)resetPrintInfo:(id)pId {
   printInfo = [[NSPrintInfo alloc] initWithDictionary:[NSDictionary dictionary]];
   [NSPrintInfo setSharedPrintInfo: printInfo];
+  [self resetMarginsPagination:pId];
+}
+
+- (IBAction)resetMarginsPagination:(id)pId {
   [printInfo setTopMargin:0];
   [printInfo setLeftMargin:0];
   [printInfo setRightMargin:0];
   [printInfo setBottomMargin:0];
-  [printInfo setVerticalPagination:NSFitPagination];
+  [printInfo setVerticalPagination:NSClipPagination];
   [printInfo setHorizontalPagination:NSFitPagination];
+  [printInfo setVerticallyCentered:YES];
+  [printInfo setHorizontallyCentered:YES];
 }
 
 //
