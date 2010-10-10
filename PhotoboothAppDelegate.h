@@ -37,6 +37,7 @@ enum CaputreState {
   NSMutableArray* imageList;  // Holds images from oldest to most recent.
   enum CaputreState state;
   NSTimer* cameraResetWatchdog;  // Resets to ready if camera is taking too long.
+  NSUserDefaults* preferences;
   
   // Camera search state.
   ICDeviceBrowser* deviceBrowser;
@@ -64,6 +65,7 @@ enum CaputreState {
 - (IBAction)scrollBrowseRight:(id)pId;
 - (IBAction)print:(id)pId;
 - (IBAction)showEffects:(id)pId;
+- (IBAction)showPageLayout:(id)pId;
 
 // Preferences Sheetl Actions.
 - (IBAction)savePreferences:(id)pId;

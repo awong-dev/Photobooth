@@ -26,6 +26,9 @@
 @synthesize defaultImage;
 @synthesize imageList;
 
+NSString* kPrintInfoPref = @"UserPrintInfo";
+NSString* kImageDirectoryPref = @"UserImageDirectory";
+
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed: (NSApplication *)sender
 {
   // terminate when last window was closed
@@ -47,9 +50,26 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+  // Load preferences.
+  preferences = [NSUserDefaults standardUserDefaults];  
+  NSData* defaultPrintInfo = [preferences dataForKey:kPrintInfoPref];
+  NSString* defaultImageDirectory =
+      [preferences objectForKey:kImageDirectoryPref];
+  
+  if (defaultPrintInfo != nil) {
+    NSDictionary* printInfoPrefs =
+        [NSUnarchiver unarchiveObjectWithData:defaultPrintInfo];
+    [NSPrintInfo setSharedPrintInfo:
+        [[NSPrintInfo alloc] initWithDictionary:printInfoPrefs]];
+  }
+  if (defaultImageDirectory == nil) {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSPicturesDirectory,
+        NSUserDomainMask, YES);
+    defaultImageDirectory = [paths objectAtIndex:0];
+  }
+
   // Fixup the UI.
-  [self setImagesDirectory:
-      [NSHomeDirectory() stringByAppendingPathComponent:@"test"]];
+  [self setImagesDirectory:defaultImageDirectory];
   [self initializeMainImage];
   [self setUninitialized];
 
@@ -67,7 +87,7 @@
     | ICDeviceTypeMaskCamera
     | ICDeviceLocationTypeMaskLocal;
 
-  [deviceBrowser start];  
+  [deviceBrowser start];
 }
 
 - (void)applicationWillTerminate:(NSNotification*)notification {
@@ -145,6 +165,26 @@
 - (IBAction)showEffects:(id)pId {
 }
 
+- (void)pageLayoutDidEnd:(NSPageLayout *)pageLayout
+              returnCode:(int)returnCode
+             contextInfo:(void *)contextInfo {
+  if (returnCode == NSOKButton) {
+    [preferences setObject:
+        [NSArchiver archivedDataWithRootObject:[[pageLayout printInfo] dictionary]]
+                    forKey:kPrintInfoPref];
+    [preferences synchronize];
+  }
+}
+
+- (IBAction)showPageLayout:(id)pId {
+  NSPageLayout *pageLayout = [NSPageLayout pageLayout];
+  [pageLayout beginSheetWithPrintInfo:[NSPrintInfo sharedPrintInfo]
+                       modalForWindow:window
+                             delegate:self
+                       didEndSelector:@selector(pageLayoutDidEnd:returnCode:contextInfo:)
+                          contextInfo:nil];
+}
+
 //
 // ------ Preferences Sheet Actions ------
 //
@@ -210,11 +250,17 @@
 // ------ Public API -------
 //
 - (void)setImagesDirectory:(NSString*) path {
+  if ([imagesDirectory isEqual:path]) {
+    return;
+  }
   // We write our own setting becaus we want to always update the labels when
   // we set this path.
   [imagesDirectory release];
   imagesDirectory = path;
   [imagesDirectory retain];
+
+  [preferences setObject:imagesDirectory forKey:kImageDirectoryPref];
+  [preferences synchronize];
   
   [selectedImagesDirectory setStringValue:imagesDirectory];
   [self rescanImagesDirectory];
@@ -338,9 +384,9 @@
                   error:(NSError*)error
                 options:(NSDictionary*)options
             contextInfo:(void*)contextInfo {
-  // TODO(ajwong): Add newly found file into browser.
   NSString* filename = [options objectForKey:ICSavedFilename];
-  [self addAnImageWithPath:[imagesDirectory stringByAppendingPathComponent:filename]];
+  [self addAnImageWithPath:[
+      imagesDirectory stringByAppendingPathComponent:filename]];
   [browserView reloadData];
   [self imageBrowserSelectionDidChange:browserView];
   
