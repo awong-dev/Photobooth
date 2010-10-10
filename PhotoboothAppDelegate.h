@@ -24,27 +24,37 @@ enum CaputreState {
   NSWindow *window;
   IKImageView* mainImage;
   IKImageBrowserView *browserView;
-  NSScrollView* browserViewContainer;
   NSTextField *statusText;
+
+  // Preferences Sheet Elements.
+  NSWindow *preferencesSheet;
+  NSTextField *selectedImagesDirectory;
+  IKDeviceBrowserView *deviceBrowserView;
 
   // Controller state.
   NSString* imagesDirectory;
   ImageInfo* defaultImage;
   NSMutableArray* imageList;  // Holds images from oldest to most recent.
   enum CaputreState state;
+  NSTimer* cameraResetWatchdog;  // Resets to ready if camera is taking too long.
   
   // Camera search state.
   ICDeviceBrowser* deviceBrowser;
   NSMutableArray* cameras;
+  ICCameraDevice* activeCamera;
 }
 
 @property(retain, nonatomic) IBOutlet NSWindow *window;
 @property(retain, nonatomic) IBOutlet IKImageView *mainImage;
 @property(retain, nonatomic) IBOutlet IKImageBrowserView *browserView;
-@property(retain, nonatomic) IBOutlet NSScrollView *browserViewContainer;
 @property(retain, nonatomic) IBOutlet NSTextField *statusText;
 
-@property(retain) NSString* imagesDirectory;
+// Preferences sheet stuff.
+@property(retain, nonatomic) IBOutlet NSWindow *preferencesSheet;
+@property(retain, nonatomic) IBOutlet NSTextField *selectedImagesDirectory;
+@property(retain, nonatomic) IBOutlet IKDeviceBrowserView *deviceBrowserView;
+
+@property(readonly, retain) NSString* imagesDirectory;
 @property(retain, nonatomic) ImageInfo* defaultImage;
 @property(retain, nonatomic) NSMutableArray* imageList;
 
@@ -55,6 +65,16 @@ enum CaputreState {
 - (IBAction)print:(id)pId;
 - (IBAction)showEffects:(id)pId;
 
+// Preferences Sheetl Actions.
+- (IBAction)savePreferences:(id)pId;
+- (IBAction)cancelPreferences:(id)pId;
+- (IBAction)showPreferences:(id)pId;
+- (IBAction)showImageDirectoryChooser:(id)pId;
+- (void)deviceBrowserView:(IKDeviceBrowserView *)deviceBrowserView
+        didEncounterError:(NSError *)error;
+- (void)deviceBrowserView:(IKDeviceBrowserView *)deviceBrowserView
+       selectionDidChange:(ICDevice *)device;
+
 // IKImageBrowserView delegates.
 - (NSUInteger) numberOfItemsInImageBrowser:(IKImageBrowserView *)aBrowser;
 - (id) imageBrowser:(IKImageBrowserView *) aBrowser itemAtIndex:(NSUInteger)index;
@@ -63,12 +83,18 @@ enum CaputreState {
 - (void)deviceBrowser:(ICDeviceBrowser*)browser didAddDevice:(ICDevice*)device moreComing:(BOOL)moreComing;
 - (void)deviceBrowser:(ICDeviceBrowser*)browser didRemoveDevice:(ICDevice*)device moreGoing:(BOOL)moreGoing;
 
+// Public API.
+- (void)setImagesDirectory:(NSString*)path;
+
 // Internal functions.
 - (void)initializeMainImage;
 - (void)initializeBrowseList;
+- (void)rescanImagesDirectory;
 - (void)addImagesWithPath:(NSString*)path;
 - (void)addAnImageWithPath:(NSString*)path;
 - (void)setReadyText:(NSString*)deviceName;
 - (void)setDownloadingText:(NSString*)filename;
 - (void)setUninitialized;
+- (void)setActiveCamera:(ICCameraDevice*)camera;
+- (void)snapshotWatchdog:(NSTimer*)timer;
 @end

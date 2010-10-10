@@ -16,8 +16,11 @@
 @synthesize window;
 @synthesize mainImage;
 @synthesize browserView;
-@synthesize browserViewContainer;
 @synthesize statusText;
+
+@synthesize preferencesSheet;
+@synthesize selectedImagesDirectory;
+@synthesize deviceBrowserView;
 
 @synthesize imagesDirectory;
 @synthesize defaultImage;
@@ -36,21 +39,22 @@
       [[ImageInfo alloc] initWithPath:
           [NSHomeDirectory() stringByAppendingPathComponent:@"marmalade.png"]];
     imageList = [[NSMutableArray alloc] init];
-    imagesDirectory =
-      [[NSHomeDirectory() stringByAppendingPathComponent:@"test"] retain];
     state = kUninitialized;
   }
   return self;
 }
 
-- (void)awakeFromNib {
-  [self initializeMainImage];
-  [self initializeBrowseList];
-  [self setUninitialized];
-}
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+  // Fixup the UI.
+  [self setImagesDirectory:
+      [NSHomeDirectory() stringByAppendingPathComponent:@"test"]];
+  [self initializeMainImage];
+  [self setUninitialized];
+
+
+  // Setup cameras.
   cameras = [[NSMutableArray alloc] initWithCapacity:0];
   
   // Get an instance of ICDeviceBrowser
@@ -82,44 +86,58 @@
     return;
   }
   
-  [[cameras lastObject] requestTakePicture];
+  [activeCamera requestTakePicture];
   state = kTakingPicture;
   // TODO(ajwong): Setup watchdog timer that will close session and restart if
   // download does not complete in 3 seconds.
+  if (cameraResetWatchdog != nil) {
+    [cameraResetWatchdog invalidate];
+    cameraResetWatchdog = nil;
+  }
+  cameraResetWatchdog = [[NSTimer
+                         scheduledTimerWithTimeInterval:2.0
+                                                 target:self
+                                               selector:@selector(snapshotWatchdog:)
+                                               userInfo:nil
+                                                repeats:NO]
+                         retain];
 }
 
 - (IBAction)scrollBrowseLeft:(id)pId {
-  NSClipView* scrollContents = [browserViewContainer contentView];
-  NSPoint newOrigin = [scrollContents visibleRect].origin;
-  newOrigin.x = newOrigin.x - [browserView cellSize].width;
-  newOrigin.x = newOrigin.x > 0 ? newOrigin.x : 0;
-  [scrollContents scrollToPoint: newOrigin];
-  [browserViewContainer reflectScrolledClipView: scrollContents];
+  NSIndexSet *visibleIndexes = [browserView visibleItemIndexes];
+  [browserView scrollIndexToVisible:[visibleIndexes firstIndex]];
+  [browserView setNeedsDisplay:YES];
 }
 
 - (IBAction)scrollBrowseRight:(id)pId {
-  NSClipView* scrollContents = [browserViewContainer contentView];
-  NSPoint newOrigin = [scrollContents visibleRect].origin;
-  newOrigin.x = newOrigin.x + [browserView cellSize].width;
-  CGFloat visibleWidth = [browserViewContainer visibleRect].size.width;
-  CGFloat maxScroll = [browserView bounds].size.width - visibleWidth;
-  maxScroll = maxScroll < 0 ? 0 : maxScroll;
-  newOrigin.x = newOrigin.x > maxScroll ? maxScroll : newOrigin.x;
-  [scrollContents scrollToPoint: newOrigin];
-  [browserViewContainer reflectScrolledClipView: scrollContents];
+  NSIndexSet *visibleIndexes = [browserView visibleItemIndexes];
+  [browserView scrollIndexToVisible:[visibleIndexes lastIndex]];
+  [browserView setNeedsDisplay:YES];
 }
 
 - (IBAction)print:(id)pId {
   // If the image has edits, save to disk.
-  // Print the main image.
-  NSPrintInfo* origInfo = [NSPrintInfo sharedPrintInfo];
-  NSPrintInfo* newInfo = [[NSPrintInfo alloc] initWithDictionary:[origInfo dictionary]];
-  [newInfo setVerticalPagination:NSFitPagination];
-  [newInfo setHorizontalPagination:NSFitPagination];
+  // Print the main image.  The IKImageView does not seem to support printing
+  // directly which is strange.
+  NSSize imageSize = [mainImage imageSize];
+  NSImage* image = [[NSImage alloc] initWithCGImage:[mainImage image]
+                                               size:imageSize];
+  NSRect frameSize = NSMakeRect(0, 0, imageSize.width, imageSize.height);
+  NSImageView* printableView = [[NSImageView alloc] initWithFrame:frameSize];
+  [printableView setImage:image];
+
+  // Allow this to be configured in the diagloue instead.
+  NSPrintInfo* printInfo = [NSPrintInfo sharedPrintInfo];
+  [printInfo setTopMargin:0];
+  [printInfo setLeftMargin:0];
+  [printInfo setRightMargin:0];
+  [printInfo setBottomMargin:0];
+  [printInfo setVerticalPagination:NSFitPagination];
+  [printInfo setHorizontalPagination:NSFitPagination];
   
   NSPrintOperation *op =
-     [NSPrintOperation printOperationWithView:mainImage printInfo:newInfo];
-  [op setShowsPrintPanel:NO];
+     [NSPrintOperation printOperationWithView:printableView];
+//  [op setShowsPrintPanel:NO];
   [op setCanSpawnSeparateThread:YES];
   [op runOperation];
 }
@@ -127,6 +145,45 @@
 - (IBAction)showEffects:(id)pId {
 }
 
+//
+// ------ Preferences Sheet Actions ------
+//
+
+- (IBAction)showPreferences:(id)pId {
+  [NSApp beginSheet:preferencesSheet modalForWindow:window
+      modalDelegate:self didEndSelector:NULL contextInfo:nil];
+}
+
+- (IBAction)savePreferences:(id)pId {
+  [self setImagesDirectory:[selectedImagesDirectory stringValue]];
+  [preferencesSheet orderOut:nil];
+  [NSApp endSheet:preferencesSheet];
+  activeCamera = [(ICCameraDevice*)[deviceBrowserView selectedDevice] retain];
+}
+
+- (IBAction)cancelPreferences:(id)pId {
+  [preferencesSheet orderOut:nil];
+  [NSApp endSheet:preferencesSheet];
+}
+
+- (IBAction)showImageDirectoryChooser:(id)pId {
+  NSOpenPanel* panel = [NSOpenPanel openPanel];
+  [panel setCanChooseFiles:NO];
+  [panel setCanChooseDirectories:YES];
+  [panel beginWithCompletionHandler: ^ (NSInteger result) {
+    if (result == NSFileHandlingPanelOKButton) {
+      [selectedImagesDirectory setStringValue:[panel filename]];
+    }
+  }];
+}
+
+- (void)deviceBrowserView:(IKDeviceBrowserView *)deviceBrowserView
+       selectionDidChange:(ICDevice *)device {
+}
+
+- (void)deviceBrowserView:(IKDeviceBrowserView *)deviceBrowserView
+        didEncounterError:(NSError *)error {
+}
 
 //
 // ------ IKImageBrowserView delegates------
@@ -136,17 +193,33 @@
 }
 
 - (id) imageBrowser:(IKImageBrowserView *)aBrowser itemAtIndex:(NSUInteger)index {
-  return [imageList objectAtIndex:index];
+  return [imageList objectAtIndex:[imageList count] - index - 1];
 }
 
 - (void) imageBrowserSelectionDidChange:(IKImageBrowserView *) aBrowser {
   NSIndexSet* indexes = [browserView selectionIndexes];
   if ([indexes count] > 0) {
-    ImageInfo* image = [imageList objectAtIndex:[indexes firstIndex]];
+    ImageInfo* image = [self imageBrowser:browserView itemAtIndex:[indexes firstIndex]];
     [mainImage setImageWithURL:[image url]];
     [mainImage zoomImageToFit: self]; 
   }
 }
+
+
+//
+// ------ Public API -------
+//
+- (void)setImagesDirectory:(NSString*) path {
+  // We write our own setting becaus we want to always update the labels when
+  // we set this path.
+  [imagesDirectory release];
+  imagesDirectory = path;
+  [imagesDirectory retain];
+  
+  [selectedImagesDirectory setStringValue:imagesDirectory];
+  [self rescanImagesDirectory];
+};
+
 
 //
 // ------ Internal functions -------
@@ -170,8 +243,14 @@
   [browserView reloadData];
 }
 
+- (void)rescanImagesDirectory {
+  [imageList removeAllObjects];
+  [self addImagesWithPath:imagesDirectory];
+  [self initializeBrowseList];
+}
+
 - (void)addImagesWithPath:(NSString*)path {
-  NSFileManager *localFileManager = [[NSFileManager alloc] init];
+  NSFileManager *localFileManager = [[[NSFileManager alloc] init] autorelease];
   NSDirectoryEnumerator *dirEnum =
     [localFileManager enumeratorAtPath:imagesDirectory];
 
@@ -183,16 +262,14 @@
       [self addAnImageWithPath:[imagesDirectory stringByAppendingPathComponent:file]];
     }
   }
-  [localFileManager release];
 }
 
 - (void)addAnImageWithPath:(NSString *) path
 {
   ImageInfo *imageInfo;
 
-  imageInfo = [[ImageInfo alloc] initWithPath:path];
+  imageInfo = [[[ImageInfo alloc] initWithPath:path] autorelease];
   [imageList addObject:imageInfo];
-  [imageInfo release];
 }
 
 
@@ -218,7 +295,9 @@
     [cameras addObject:addedDevice];
     [self didChangeValueForKey:@"cameras"];
 
-    [[cameras lastObject] requestOpenSession];
+    if (activeCamera == nil) {
+      [self setActiveCamera:(ICCameraDevice*)addedDevice];
+    }
   }
 }
 
@@ -226,17 +305,16 @@
 - (void)deviceBrowser:(ICDeviceBrowser*)browser didRemoveDevice:(ICDevice*)device moreGoing:(BOOL)moreGoing
 {
   device.delegate = NULL;
-  
+
   // implement manual observer notification for the cameras property
   [self willChangeValueForKey:@"cameras"];
   [cameras removeObject:device];
   [self didChangeValueForKey:@"cameras"];
-
-  // Open the new camera if there is one.
-  if ([cameras count] == 0) {
-    [self setUninitialized];
+  
+  if (activeCamera == device && [cameras count] == 0) {
+    [self setActiveCamera:nil];
   } else {
-    [[cameras lastObject] requestOpenSession];
+    [self setActiveCamera:[cameras lastObject]];
   }
 }
 
@@ -264,6 +342,13 @@
   NSString* filename = [options objectForKey:ICSavedFilename];
   [self addAnImageWithPath:[imagesDirectory stringByAppendingPathComponent:filename]];
   [browserView reloadData];
+  [self imageBrowserSelectionDidChange:browserView];
+  
+  // Must scroll *after* we've reloaded the data, otherwise we use the stale array.
+  [browserView scrollIndexToVisible:0];
+  NSIndexSet* selectFirst = [[NSIndexSet alloc] initWithIndex:0];
+  [browserView setSelectionIndexes:selectFirst byExtendingSelection:NO];  
+  
   [self setReadyText: [[file device] name]];
 }
 
@@ -307,6 +392,8 @@
   if (error != nil) {
     NSLog(@"Error %@", error);
   }
+  // We retained this in setActiveCamera.
+  [device release];
 }
 
 - (void)setReadyText:(NSString*)deviceName {
@@ -326,5 +413,23 @@
   [statusText setStringValue:@"No Camera Found"];
 }
 
+
+- (void)setActiveCamera:(ICCameraDevice*)camera {
+  [activeCamera requestCloseSession];
+  activeCamera = [camera retain];
+  if (camera != nil) {
+    [activeCamera requestOpenSession];
+  } else {
+    [self setUninitialized];
+  }
+}
+
+- (void)snapshotWatchdog:(NSTimer*)timer {
+  if (activeCamera) {
+    [self setReadyText:[activeCamera name]];
+  } else {
+    [self setUninitialized];
+  }
+}
 
 @end
