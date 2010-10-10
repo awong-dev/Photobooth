@@ -41,7 +41,7 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   {
     self.defaultImage = 
       [[ImageInfo alloc] initWithPath:
-          [NSHomeDirectory() stringByAppendingPathComponent:@"marmalade.png"]];
+        [[NSBundle mainBundle] pathForResource:@"camera" ofType:@"png"]];
     imageList = [[NSMutableArray alloc] init];
     printSheetDidEndSelector =
         @selector(printSheetDidEnd:returnCode:contextInfo:);
@@ -49,9 +49,7 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   return self;
 }
 
-
-- (void)applicationDidFinishLaunching:(NSNotification*)notification
-{
+- (void)awakeFromNib {
   // Load preferences.
   preferences = [NSUserDefaults standardUserDefaults];  
   NSData* defaultPrintInfo = [preferences dataForKey:kPrintInfoPref];
@@ -77,12 +75,15 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
     defaultImageDirectory = [paths objectAtIndex:0];
   }
 
-  // Fixup the UI.
+  // Setup the UI.
   [self setImagesDirectory:defaultImageDirectory];
   [self initializeMainImage];
   [self setUninitialized];
+}
 
 
+- (void)applicationDidFinishLaunching:(NSNotification*)notification
+{
   // Setup cameras.
   cameras = [[NSMutableArray alloc] initWithCapacity:0];
   
@@ -148,12 +149,17 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   // If the image has edits, save to disk.
   // Print the main image.  The IKImageView does not seem to support printing
   // directly which is strange.
-  NSSize imageSize = [mainImage imageSize];
-  NSImage* image = [[NSImage alloc] initWithCGImage:[mainImage image]
-                                               size:imageSize];
+  NSIndexSet* indexes = [browserView selectionIndexes];
+  if ([indexes count] == 0) {
+    return;
+  }
+  ImageInfo* imageInfo = [self imageBrowser:browserView
+                                itemAtIndex:[indexes firstIndex]];
+  NSImage* image = [[NSImage alloc] initByReferencingURL:[imageInfo url]];
+  // TODO(ajwong): Should this use paper size here?
+  NSSize imageSize = [image size];
   NSRect frameSize = NSMakeRect(0, 0, imageSize.width, imageSize.height);
   NSImageView* printableView = [[NSImageView alloc] initWithFrame:frameSize];
-  // TODO(ajwong): Use the image file directly to preserve color profile?
   [printableView setImage:image];
 
   NSPrintOperation *op =
@@ -313,7 +319,6 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   // customize the IKImageView...
   [mainImage setDoubleClickOpensImageEditPanel: NO];
   [mainImage setCurrentToolMode: IKToolModeNone];
-  [mainImage zoomImageToFit: self]; 
   [mainImage setDelegate: self];
 }
 
