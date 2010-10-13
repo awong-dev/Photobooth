@@ -39,6 +39,9 @@ enum CaputreState {
   ImageInfo* countdownImage1;
   ImageInfo* countdownImage2;
   ImageInfo* countdownImage3;
+	
+  // Stock sounds.
+	NSSound *beepSound;
 
   // Controller state.
   NSRect originalFrame;
@@ -78,6 +81,7 @@ enum CaputreState {
 @property(retain, nonatomic) ImageInfo* countdownImage2;
 @property(retain, nonatomic) ImageInfo* countdownImage3;
 @property(retain, nonatomic) NSMutableArray* imageList;
+@property(retain, nonatomic) NSSound* beepSound;
 
 // UI Actions.
 - (IBAction)takePicture:(id)pId;

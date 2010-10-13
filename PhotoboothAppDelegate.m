@@ -32,6 +32,7 @@
 @synthesize countdownImage2;
 @synthesize countdownImage3;
 @synthesize imageList;
+@synthesize beepSound;
 
 NSString* kPrintInfoPref = @"UserPrintInfoRaw";
 NSString* kImageDirectoryPref = @"UserImageDirectory";
@@ -63,6 +64,7 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
     imageList = [[NSMutableArray alloc] init];
     printSheetDidEndSelector =
         @selector(printSheetDidEnd:returnCode:contextInfo:);
+	  beepSound = [NSSound soundNamed:@"beep.wav"];
   }
   return self;
 }
@@ -128,9 +130,9 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 // ------ UI Actions -------
 //
 - (IBAction)takePicture:(id)pId {
-  if (state != kReady) {
-    return;
-  }
+//  if (state != kReady) {
+//    return;
+//  }
 
   // Do 3 second countdown.
   currentCount = 3;
@@ -178,15 +180,18 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 
     case 1:
       [self updateMainImage:self.countdownImage1 shouldZoom:NO];
-      break;
+		  [beepSound play];
+		  break;
 
     case 2:
       [self updateMainImage:self.countdownImage2 shouldZoom:NO];
-      break;
+      		  [beepSound play];
+		  break;
 
     case 3:
       [self updateMainImage:self.countdownImage3 shouldZoom:NO];
-      break;
+      		  [beepSound play];
+		  break;
   }
   [mainImage setNeedsDisplay:YES];
 }
