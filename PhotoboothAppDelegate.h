@@ -22,6 +22,7 @@ enum CaputreState {
  @private
   // UI Elements.
   NSWindow *window;
+  NSWindow *fullscreenWindow;
   IKImageView* mainImage;
   IKImageBrowserView *browserView;
   NSTextField *statusText;
@@ -40,6 +41,7 @@ enum CaputreState {
   ImageInfo* countdownImage3;
 
   // Controller state.
+  NSRect originalFrame;
   NSString* imagesDirectory;
   NSMutableArray* imageList;  // Holds images from oldest to most recent.
   enum CaputreState state;
@@ -58,6 +60,7 @@ enum CaputreState {
 }
 
 @property(retain, nonatomic) IBOutlet NSWindow *window;
+@property(retain, nonatomic) IBOutlet NSWindow *fullscreenWindow;
 @property(retain, nonatomic) IBOutlet IKImageView *mainImage;
 @property(retain, nonatomic) IBOutlet IKImageBrowserView *browserView;
 @property(retain, nonatomic) IBOutlet NSTextField *statusText;

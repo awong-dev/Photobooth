@@ -21,9 +21,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="78"/>
-			<integer value="650"/>
 			<integer value="664"/>
+			<integer value="24"/>
+			<integer value="650"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -365,6 +365,15 @@
 									<reference key="NSOnImage" ref="35465992"/>
 									<reference key="NSMixedImage" ref="502551668"/>
 								</object>
+								<object class="NSMenuItem" id="264142754">
+									<reference key="NSMenu" ref="835318025"/>
+									<string key="NSTitle">Leave Fullscreen</string>
+									<string key="NSKeyEquiv">F</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="35465992"/>
+									<reference key="NSMixedImage" ref="502551668"/>
+								</object>
 							</object>
 							<string key="NSName">_NSWindowsMenu</string>
 						</object>
@@ -375,7 +384,7 @@
 			<object class="NSWindowTemplate" id="972006081">
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{15, 49}, {1006, 787}}</string>
+				<string key="NSWindowRect">{{15, 66}, {1006, 770}}</string>
 				<int key="NSWTFlags">1954021376</int>
 				<string key="NSWindowTitle">Photobooth</string>
 				<string key="NSWindowClass">NSWindow</string>
@@ -396,10 +405,10 @@
 									<string>NSFilenamesPboardType</string>
 								</object>
 							</object>
-							<string key="NSFrame">{{0, 198}, {1006, 589}}</string>
+							<string key="NSFrame">{{0, 198}, {1006, 572}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<bool key="NSViewIsLayerTreeHost">YES</bool>
-							<float key="zoomFactor">0.38374999165534973</float>
+							<float key="zoomFactor">0.35749998688697815</float>
 							<float key="rotationAngle">0.0</float>
 							<string key="currentToolMode">IKToolModeNone</string>
 							<bool key="autoresizes">YES</bool>
@@ -475,7 +484,7 @@
 											<string key="NSResourceName">camera</string>
 										</object>
 										<string key="NSAlternateContents"/>
-										<string key="NSKeyEquivalent"/>
+										<string type="base64-UTF8" key="NSKeyEquivalent">IA</string>
 										<int key="NSPeriodicDelay">400</int>
 										<int key="NSPeriodicInterval">75</int>
 										<object class="NSCustomResource" key="NSSound">
@@ -685,7 +694,7 @@
 													<string>NeXT TIFF v4.0 pasteboard type</string>
 												</object>
 											</object>
-											<string key="NSFrameSize">{1005, 109}</string>
+											<string key="NSFrameSize">{1005, 92}</string>
 											<reference key="NSSuperview" ref="857359791"/>
 											<int key="NSViewLayerContentsRedrawPolicy">2</int>
 											<bool key="constrainsToOriginalSize">NO</bool>
@@ -702,7 +711,7 @@
 											<reference key="delegate"/>
 										</object>
 									</object>
-									<string key="NSFrame">{{1, 1}, {1005, 109}}</string>
+									<string key="NSFrame">{{1, 1}, {1005, 92}}</string>
 									<reference key="NSSuperview" ref="578533111"/>
 									<reference key="NSNextKeyView" ref="327578337"/>
 									<reference key="NSDocView" ref="327578337"/>
@@ -730,7 +739,7 @@
 									<double key="NSPercent">0.50602412223815918</double>
 								</object>
 							</object>
-							<string key="NSFrame">{{-1, 20}, {1007, 111}}</string>
+							<string key="NSFrame">{{-1, 20}, {1007, 94}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<reference key="NSNextKeyView" ref="857359791"/>
 							<int key="NSsFlags">546</int>
@@ -740,7 +749,7 @@
 							<bytes key="NSScrollAmts">QSAAAEEgAABC8VVVQvAAAA</bytes>
 						</object>
 					</object>
-					<string key="NSFrameSize">{1006, 787}</string>
+					<string key="NSFrameSize">{1006, 770}</string>
 					<reference key="NSSuperview"/>
 					<int key="NSViewLayerContentsRedrawPolicy">2</int>
 				</object>
@@ -1222,6 +1231,22 @@
 					</object>
 					<int key="connectionID">755</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">leaveFullscreen:</string>
+						<reference key="source" ref="976324537"/>
+						<reference key="destination" ref="264142754"/>
+					</object>
+					<int key="connectionID">758</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">enterFullscreen:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="1718"/>
+					</object>
+					<int key="connectionID">760</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1451,6 +1476,7 @@
 							<reference ref="1011231497"/>
 							<reference ref="1718"/>
 							<reference ref="499817647"/>
+							<reference ref="264142754"/>
 						</object>
 						<reference key="parent" ref="713487014"/>
 					</object>
@@ -1730,6 +1756,11 @@
 						<reference key="object" ref="785191281"/>
 						<reference key="parent" ref="147695061"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">757</int>
+						<reference key="object" ref="264142754"/>
+						<reference key="parent" ref="835318025"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1845,6 +1876,7 @@
 					<string>747.IBPluginDependency</string>
 					<string>753.IBPluginDependency</string>
 					<string>754.IBPluginDependency</string>
+					<string>757.IBPluginDependency</string>
 					<string>78.IBPluginDependency</string>
 					<string>78.ImportedFromIB2</string>
 					<string>81.IBEditorWindowLastContentRect</string>
@@ -1882,7 +1914,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{547, 180}, {254, 283}}</string>
+					<string>{{538, 763}, {125, 73}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{187, 434}, {243, 243}}</string>
@@ -1900,18 +1932,18 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{654, 239}, {194, 73}}</string>
+					<string>{{586, 743}, {203, 93}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{525, 802}, {197, 73}}</string>
-					<string>{{382, 836}, {283, 20}}</string>
+					<string>{{386, 836}, {283, 20}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{74, 862}</string>
 					<string>{{6, 978}, {478, 20}}</string>
-					<string>{{-2, 68}, {1006, 787}}</string>
+					<string>{{382, 86}, {1006, 770}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{-2, 68}, {1006, 787}}</string>
+					<string>{{382, 86}, {1006, 770}}</string>
 					<integer value="1"/>
 					<string>{{33, 99}, {480, 360}}</string>
 					<string>{3.40282e+38, 3.40282e+38}</string>
@@ -1933,9 +1965,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{208, 571}, {632, 279}}</string>
+					<string>{{382, 571}, {632, 279}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{208, 571}, {632, 279}}</string>
+					<string>{{382, 571}, {632, 279}}</string>
 					<boolean value="NO"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1957,6 +1989,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1991,7 +2024,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">755</int>
+			<int key="maxID">760</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2093,6 +2126,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>browserView</string>
 							<string>deviceBrowserView</string>
+							<string>fullscreenWindow</string>
 							<string>mainImage</string>
 							<string>preferencesSheet</string>
 							<string>printButton</string>
@@ -2104,6 +2138,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>IKImageBrowserView</string>
 							<string>IKDeviceBrowserView</string>
+							<string>NSWindow</string>
 							<string>IKImageView</string>
 							<string>NSWindow</string>
 							<string>NSButton</string>
@@ -2118,6 +2153,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>browserView</string>
 							<string>deviceBrowserView</string>
+							<string>fullscreenWindow</string>
 							<string>mainImage</string>
 							<string>preferencesSheet</string>
 							<string>printButton</string>
@@ -2134,6 +2170,10 @@
 							<object class="IBToOneOutletInfo">
 								<string key="name">deviceBrowserView</string>
 								<string key="candidateClassName">IKDeviceBrowserView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">fullscreenWindow</string>
+								<string key="candidateClassName">NSWindow</string>
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">mainImage</string>

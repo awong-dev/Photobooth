@@ -10,10 +10,12 @@
 
 #import <Quartz/Quartz.h>
 #import <ImageCaptureCore/ImageCaptureCore.h>
+#import <ApplicationServices/ApplicationServices.h>
 
 @implementation PhotoboothAppDelegate
 
 @synthesize window;
+@synthesize fullscreenWindow;
 @synthesize mainImage;
 @synthesize browserView;
 @synthesize statusText;
@@ -285,9 +287,40 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 }
 
 - (IBAction)enterFullscreen:(id)pId {
+  originalFrame = [window frame];
+  [window setFrame:[window frameRectForContentRect:[[window screen] frame]]
+           display:YES
+           animate:YES];
+  if ([[window screen] isEqual:[[NSScreen screens] objectAtIndex:0]]) {
+    [NSMenu setMenuBarVisible:NO];
+  }
+
+  fullscreenWindow = [[NSWindow alloc]
+    initWithContentRect:[window contentRectForFrameRect:[window frame]]
+              styleMask:NSBorderlessWindowMask
+                backing:NSBackingStoreBuffered
+                  defer:YES
+                 screen:[window screen]];
+  [fullscreenWindow setLevel:NSFloatingWindowLevel];
+  [fullscreenWindow setContentView:[window contentView]];
+  [fullscreenWindow setTitle:[window title]];
+  [fullscreenWindow setFrame:[[window screen] frame]
+                     display:YES
+                     animate:YES];
+  [fullscreenWindow makeKeyAndOrderFront:nil];
 }
 
 - (IBAction)leaveFullscreen:(id)pId {
+  if (fullscreenWindow != nil) {
+    [window setContentView:[fullscreenWindow contentView]];
+    [fullscreenWindow setLevel:NSNormalWindowLevel];
+    [fullscreenWindow orderOut:nil];
+    fullscreenWindow = nil;    
+    [window setFrame:originalFrame
+             display:YES
+             animate:YES];
+    [NSMenu setMenuBarVisible:YES];
+  }
 }
 
 //
