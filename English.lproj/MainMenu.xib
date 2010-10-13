@@ -21,9 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="664"/>
-			<integer value="24"/>
-			<integer value="372"/>
+			<integer value="650"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -388,7 +386,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="IKImageView" id="771675552">
 							<reference key="NSNextResponder" ref="439893737"/>
-							<int key="NSvFlags">274</int>
+							<int key="NSvFlags">282</int>
 							<object class="NSMutableSet" key="NSDragTypes">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSArray" key="set.sortedObjects">
@@ -453,12 +451,12 @@
 						</object>
 						<object class="NSCustomView" id="701369770">
 							<reference key="NSNextResponder" ref="439893737"/>
-							<int key="NSvFlags">4386</int>
+							<int key="NSvFlags">4415</int>
 							<object class="NSMutableArray" key="NSSubviews">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSButton" id="1003701710">
 									<reference key="NSNextResponder" ref="701369770"/>
-									<int key="NSvFlags">268</int>
+									<int key="NSvFlags">301</int>
 									<string key="NSFrame">{{321, 9}, {363, 50}}</string>
 									<reference key="NSSuperview" ref="701369770"/>
 									<bool key="NSEnabled">YES</bool>
@@ -478,7 +476,7 @@
 								</object>
 								<object class="NSButton" id="913861524">
 									<reference key="NSNextResponder" ref="701369770"/>
-									<int key="NSvFlags">301</int>
+									<int key="NSvFlags">297</int>
 									<string key="NSFrame">{{832, 16}, {160, 32}}</string>
 									<reference key="NSSuperview" ref="701369770"/>
 									<bool key="NSEnabled">YES</bool>
@@ -509,7 +507,7 @@
 						</object>
 						<object class="NSScrollView" id="578533111">
 							<reference key="NSNextResponder" ref="439893737"/>
-							<int key="NSvFlags">274</int>
+							<int key="NSvFlags">306</int>
 							<object class="NSMutableArray" key="NSSubviews">
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSClipView" id="857359791">
@@ -519,7 +517,7 @@
 										<bool key="EncodedWithXMLCoder">YES</bool>
 										<object class="IKImageBrowserView" id="327578337">
 											<reference key="NSNextResponder" ref="857359791"/>
-											<int key="NSvFlags">18</int>
+											<int key="NSvFlags">5</int>
 											<object class="NSMutableSet" key="NSDragTypes">
 												<bool key="EncodedWithXMLCoder">YES</bool>
 												<object class="NSArray" key="set.sortedObjects">
@@ -758,6 +756,7 @@
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{522, 12}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="808708908"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="612634239">
 								<int key="NSCellFlags">-2080244224</int>
@@ -777,6 +776,7 @@
 							<reference key="NSNextResponder" ref="808708908"/>
 							<string key="NSFrame">{{20, 67}, {592, 5}}</string>
 							<reference key="NSSuperview" ref="808708908"/>
+							<reference key="NSWindow"/>
 							<string key="NSOffsets">{0, 0}</string>
 							<object class="NSTextFieldCell" key="NSTitleCell">
 								<int key="NSCellFlags">67239424</int>
@@ -807,6 +807,7 @@
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{14, 12}, {103, 32}}</string>
 							<reference key="NSSuperview" ref="808708908"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="694388899">
 								<int key="NSCellFlags">67239424</int>
@@ -827,6 +828,7 @@
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{145, 48}, {470, 17}}</string>
 							<reference key="NSSuperview" ref="808708908"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="102697938">
 								<int key="NSCellFlags">68288064</int>
@@ -843,6 +845,7 @@
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{431, 12}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="808708908"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="1054775661">
 								<int key="NSCellFlags">67239424</int>
@@ -863,6 +866,7 @@
 							<int key="NSvFlags">256</int>
 							<string key="NSFrame">{{23, 48}, {120, 17}}</string>
 							<reference key="NSSuperview" ref="808708908"/>
+							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="463416645">
 								<int key="NSCellFlags">68288064</int>
@@ -889,6 +893,7 @@
 											<int key="NSvFlags">274</int>
 											<string key="NSFrameSize">{590, 174}</string>
 											<reference key="NSSuperview" ref="775357885"/>
+											<reference key="NSWindow"/>
 											<bool key="displaysLocalCameras">YES</bool>
 											<bool key="displaysNetworkCameras">NO</bool>
 											<bool key="displaysLocalScanners">NO</bool>
@@ -898,6 +903,7 @@
 									</object>
 									<string key="NSFrame">{{1, 1}, {590, 174}}</string>
 									<reference key="NSSuperview" ref="57611011"/>
+									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView" ref="599963882"/>
 									<reference key="NSDocView" ref="599963882"/>
 									<reference key="NSBGColor" ref="298701303"/>
@@ -908,6 +914,7 @@
 									<int key="NSvFlags">-2147483392</int>
 									<string key="NSFrame">{{576, 1}, {15, 199}}</string>
 									<reference key="NSSuperview" ref="57611011"/>
+									<reference key="NSWindow"/>
 									<reference key="NSTarget" ref="57611011"/>
 									<string key="NSAction">_doScroller:</string>
 									<double key="NSCurValue">1</double>
@@ -918,6 +925,7 @@
 									<int key="NSvFlags">-2147483392</int>
 									<string key="NSFrame">{{-100, -100}, {583, 15}}</string>
 									<reference key="NSSuperview" ref="57611011"/>
+									<reference key="NSWindow"/>
 									<int key="NSsFlags">1</int>
 									<reference key="NSTarget" ref="57611011"/>
 									<string key="NSAction">_doScroller:</string>
@@ -926,6 +934,7 @@
 							</object>
 							<string key="NSFrame">{{20, 83}, {592, 176}}</string>
 							<reference key="NSSuperview" ref="808708908"/>
+							<reference key="NSWindow"/>
 							<reference key="NSNextKeyView" ref="775357885"/>
 							<bool key="NSViewCanDrawConcurrently">YES</bool>
 							<int key="NSsFlags">562</int>
@@ -936,6 +945,7 @@
 					</object>
 					<string key="NSFrameSize">{632, 279}</string>
 					<reference key="NSSuperview"/>
+					<reference key="NSWindow"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
@@ -1472,8 +1482,8 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="157119444"/>
 							<reference ref="578533111"/>
-							<reference ref="701369770"/>
 							<reference ref="771675552"/>
+							<reference ref="701369770"/>
 						</object>
 						<reference key="parent" ref="972006081"/>
 					</object>
@@ -1996,6 +2006,8 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>cancelPreferences:</string>
+							<string>enterFullscreen:</string>
+							<string>leaveFullscreen:</string>
 							<string>print:</string>
 							<string>resetMarginsPagination:</string>
 							<string>resetPrintInfo:</string>
@@ -2008,6 +2020,8 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2025,6 +2039,8 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>cancelPreferences:</string>
+							<string>enterFullscreen:</string>
+							<string>leaveFullscreen:</string>
 							<string>print:</string>
 							<string>resetMarginsPagination:</string>
 							<string>resetPrintInfo:</string>
@@ -2039,6 +2055,14 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBActionInfo">
 								<string key="name">cancelPreferences:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">enterFullscreen:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">leaveFullscreen:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
