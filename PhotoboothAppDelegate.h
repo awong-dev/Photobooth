@@ -87,6 +87,8 @@ enum CaputreState {
 - (IBAction)showPrintPanel:(id)pId;
 - (IBAction)resetPrintInfo:(id)pId;
 - (IBAction)resetMarginsPagination:(id)pId;
+- (IBAction)enterFullscreen:(id)pId;
+- (IBAction)leaveFullscreen:(id)pId;
 
 // Preferences Sheetl Actions.
 - (IBAction)savePreferences:(id)pId;
