@@ -25,6 +25,10 @@
 
 @synthesize imagesDirectory;
 @synthesize defaultImage;
+@synthesize countdownImage0;
+@synthesize countdownImage1;
+@synthesize countdownImage2;
+@synthesize countdownImage3;
 @synthesize imageList;
 
 NSString* kPrintInfoPref = @"UserPrintInfoRaw";
@@ -42,6 +46,18 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
     self.defaultImage = 
       [[ImageInfo alloc] initWithPath:
         [[NSBundle mainBundle] pathForResource:@"camera" ofType:@"png"]];
+    self.countdownImage0 = 
+      [[ImageInfo alloc] initWithPath:
+        [[NSBundle mainBundle] pathForResource:@"film-leader-0" ofType:@"png"]];
+    self.countdownImage1 = 
+      [[ImageInfo alloc] initWithPath:
+        [[NSBundle mainBundle] pathForResource:@"film-leader-1" ofType:@"png"]];
+    self.countdownImage2 = 
+      [[ImageInfo alloc] initWithPath:
+        [[NSBundle mainBundle] pathForResource:@"film-leader-2" ofType:@"png"]];
+    self.countdownImage3 = 
+      [[ImageInfo alloc] initWithPath:
+        [[NSBundle mainBundle] pathForResource:@"film-leader-3" ofType:@"png"]];
     imageList = [[NSMutableArray alloc] init];
     printSheetDidEndSelector =
         @selector(printSheetDidEnd:returnCode:contextInfo:);
@@ -55,9 +71,13 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   NSData* defaultPrintInfo = [preferences dataForKey:kPrintInfoPref];
   NSString* defaultImageDirectory =
       [preferences objectForKey:kImageDirectoryPref];
-  //printInfo =
-  //    [NSUnarchiver unarchiveObjectWithData:defaultPrintInfo];
-  
+  if (!defaultPrintInfo) {
+    printInfo =
+      [NSUnarchiver unarchiveObjectWithData:defaultPrintInfo];
+  } else {
+    printInfo = nil;
+  }
+
   if (printInfo == nil) {
     printInfo = [NSPrintInfo sharedPrintInfo];
     [self resetPrintInfo:nil];
@@ -107,25 +127,66 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 //
 - (IBAction)takePicture:(id)pId {
   if (state != kReady) {
-    // TODO(awong): Pop up an eror?
     return;
   }
-  
-  [activeCamera requestTakePicture];
-  state = kTakingPicture;
-  // TODO(ajwong): Setup watchdog timer that will close session and restart if
-  // download does not complete in 3 seconds.
-  if (cameraResetWatchdog != nil) {
-    [cameraResetWatchdog invalidate];
-    cameraResetWatchdog = nil;
-  }
+
+  // Do 3 second countdown.
+  currentCount = 3;
+  [self updateCountdownUI:currentCount];
   cameraResetWatchdog = [[NSTimer
-                         scheduledTimerWithTimeInterval:2.0
+                         scheduledTimerWithTimeInterval:1.0
                                                  target:self
-                                               selector:@selector(snapshotWatchdog:)
+                                               selector:@selector(onCountdown:)
                                                userInfo:nil
-                                                repeats:NO]
+                                                repeats:YES]
                          retain];
+}
+
+- (IBAction)onCountdown:(NSTimer*)timer {
+  [self updateCountdownUI:currentCount - 1];
+  if (currentCount > 0) {
+    currentCount--;
+  } else {
+    [timer invalidate];
+    [activeCamera requestTakePicture];
+    state = kTakingPicture;
+    // TODO(ajwong): Setup watchdog timer that will close session and restart if
+    // download does not complete in 3 seconds.
+    if (cameraResetWatchdog != nil) {
+      [cameraResetWatchdog invalidate];
+      cameraResetWatchdog = nil;
+    }
+    cameraResetWatchdog = [[NSTimer
+      scheduledTimerWithTimeInterval:2.0
+                              target:self
+                            selector:@selector(snapshotWatchdog:)
+                            userInfo:nil
+                             repeats:NO]
+                             retain];
+  }
+}
+
+- (void)updateCountdownUI:(int)count {
+  NSLog(@"Count: %d", count);
+  switch (count) {
+    default:
+    case 0:
+      [self updateMainImage:self.countdownImage0 shouldZoom:NO];
+      break;
+
+    case 1:
+      [self updateMainImage:self.countdownImage1 shouldZoom:NO];
+      break;
+
+    case 2:
+      [self updateMainImage:self.countdownImage2 shouldZoom:NO];
+      break;
+
+    case 3:
+      [self updateMainImage:self.countdownImage3 shouldZoom:NO];
+      break;
+  }
+  [mainImage setNeedsDisplay:YES];
 }
 
 - (IBAction)print:(id)pId {
@@ -277,9 +338,8 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 - (void) imageBrowserSelectionDidChange:(IKImageBrowserView *) aBrowser {
   NSIndexSet* indexes = [browserView selectionIndexes];
   if ([indexes count] > 0) {
-    ImageInfo* image = [self imageBrowser:browserView itemAtIndex:[indexes firstIndex]];
-    [mainImage setImageWithURL:[image url]];
-    [mainImage zoomImageToFit: self]; 
+    [self updateMainImage:[self imageBrowser:browserView itemAtIndex:[indexes firstIndex]]
+               shouldZoom:YES];
   }
 }
 
@@ -310,7 +370,7 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 //
 
 - (void)initializeMainImage {
-  [mainImage setImageWithURL:self.defaultImage.url];
+  [self updateMainImage:self.defaultImage shouldZoom:NO];
   
   // customize the IKImageView...
   [mainImage setDoubleClickOpensImageEditPanel: NO];
@@ -496,7 +556,6 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   [statusText setStringValue:@"No Camera Found"];
 }
 
-
 - (void)setActiveCamera:(ICCameraDevice*)camera {
   [activeCamera requestCloseSession];
   activeCamera = [camera retain];
@@ -513,6 +572,14 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   } else {
     [self setUninitialized];
   }
+}
+
+- (void)updateMainImage:(ImageInfo*)info shouldZoom:(BOOL)zoom {
+  [mainImage setImageWithURL:info.url];
+  if (zoom) {
+    [mainImage zoomImageToFit: self]; 
+  }
+  [mainImage setNeedsDisplay:YES];
 }
 
 @end

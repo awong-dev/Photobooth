@@ -32,15 +32,24 @@ enum CaputreState {
   NSTextField *selectedImagesDirectory;
   IKDeviceBrowserView *deviceBrowserView;
 
+  // Stock images.
+  ImageInfo* defaultImage;
+  ImageInfo* countdownImage0;
+  ImageInfo* countdownImage1;
+  ImageInfo* countdownImage2;
+  ImageInfo* countdownImage3;
+
   // Controller state.
   NSString* imagesDirectory;
-  ImageInfo* defaultImage;
   NSMutableArray* imageList;  // Holds images from oldest to most recent.
   enum CaputreState state;
-  NSTimer* cameraResetWatchdog;  // Resets to ready if camera is taking too long.
   NSUserDefaults* preferences;
   SEL printSheetDidEndSelector;
   NSPrintInfo *printInfo;
+  NSTimer* cameraResetWatchdog;  // Resets to ready if camera doesn't snap.
+  NSTimer* countdownTimer;  // Timer for executing the countdown.
+  int currentCount;  // Used during the count-down to taking a picture.
+                     // Snapshot happens at 0.
   
   // Camera search state.
   ICDeviceBrowser* deviceBrowser;
@@ -59,8 +68,12 @@ enum CaputreState {
 @property(retain, nonatomic) IBOutlet NSTextField *selectedImagesDirectory;
 @property(retain, nonatomic) IBOutlet IKDeviceBrowserView *deviceBrowserView;
 
-@property(readonly, retain) NSString* imagesDirectory;
+@property(readonly, retain, nonatomic) NSString* imagesDirectory;
 @property(retain, nonatomic) ImageInfo* defaultImage;
+@property(retain, nonatomic) ImageInfo* countdownImage0;
+@property(retain, nonatomic) ImageInfo* countdownImage1;
+@property(retain, nonatomic) ImageInfo* countdownImage2;
+@property(retain, nonatomic) ImageInfo* countdownImage3;
 @property(retain, nonatomic) NSMutableArray* imageList;
 
 // UI Actions.
@@ -103,4 +116,7 @@ enum CaputreState {
 - (void)setUninitialized;
 - (void)setActiveCamera:(ICCameraDevice*)camera;
 - (void)snapshotWatchdog:(NSTimer*)timer;
+- (void)onCountdown:(NSTimer*)timer;
+- (void)updateCountdownUI:(int)count;
+- (void)updateMainImage:(ImageInfo*)info shouldZoom:(BOOL)zoom;
 @end

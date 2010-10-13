@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C184BF412656F1B00C0709A /* film-leader-0.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C184BF012656F1B00C0709A /* film-leader-0.png */; };
+		1C184BF512656F1B00C0709A /* film-leader-1.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C184BF112656F1B00C0709A /* film-leader-1.png */; };
+		1C184BF612656F1B00C0709A /* film-leader-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C184BF212656F1B00C0709A /* film-leader-2.png */; };
+		1C184BF712656F1B00C0709A /* film-leader-3.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C184BF312656F1B00C0709A /* film-leader-3.png */; };
 		1C4F0B7A11F6D18D0082EC5D /* ImageCaptureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C4F0B7911F6D18D0082EC5D /* ImageCaptureCore.framework */; };
 		1C4F0C0611FCB90F0082EC5D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C4F0C0511FCB90F0082EC5D /* Quartz.framework */; };
 		1C4F0C0811FCB90F0082EC5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C4F0C0711FCB90F0082EC5D /* QuartzCore.framework */; };
@@ -24,6 +28,10 @@
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1C184BF012656F1B00C0709A /* film-leader-0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "film-leader-0.png"; sourceTree = "<group>"; };
+		1C184BF112656F1B00C0709A /* film-leader-1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "film-leader-1.png"; sourceTree = "<group>"; };
+		1C184BF212656F1B00C0709A /* film-leader-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "film-leader-2.png"; sourceTree = "<group>"; };
+		1C184BF312656F1B00C0709A /* film-leader-3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "film-leader-3.png"; sourceTree = "<group>"; };
 		1C4F0B7911F6D18D0082EC5D /* ImageCaptureCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageCaptureCore.framework; path = /System/Library/Frameworks/ImageCaptureCore.framework; sourceTree = "<absolute>"; };
 		1C4F0C0511FCB90F0082EC5D /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		1C4F0C0711FCB90F0082EC5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -121,6 +129,10 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1C184BF012656F1B00C0709A /* film-leader-0.png */,
+				1C184BF112656F1B00C0709A /* film-leader-1.png */,
+				1C184BF212656F1B00C0709A /* film-leader-2.png */,
+				1C184BF312656F1B00C0709A /* film-leader-3.png */,
 				1C9FF5561262680600B903C9 /* camera.icns */,
 				1C9FF5571262680600B903C9 /* camera.png */,
 				8D1107310486CEB800E47090 /* Photobooth-Info.plist */,
@@ -186,6 +198,10 @@
 				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
 				1C9FF5581262680600B903C9 /* camera.icns in Resources */,
 				1C9FF5591262680600B903C9 /* camera.png in Resources */,
+				1C184BF412656F1B00C0709A /* film-leader-0.png in Resources */,
+				1C184BF512656F1B00C0709A /* film-leader-1.png in Resources */,
+				1C184BF612656F1B00C0709A /* film-leader-2.png in Resources */,
+				1C184BF712656F1B00C0709A /* film-leader-3.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
