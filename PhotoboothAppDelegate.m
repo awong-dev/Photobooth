@@ -284,6 +284,12 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   [printInfo setHorizontallyCentered:YES];
 }
 
+- (IBAction)enterFullscreen:(id)pId {
+}
+
+- (IBAction)leaveFullscreen:(id)pId {
+}
+
 //
 // ------ Preferences Sheet Actions ------
 //
