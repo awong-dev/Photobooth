@@ -19,6 +19,7 @@
 		1CB8C6F91259291400DD851D /* ImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB8C6F81259291400DD851D /* ImageInfo.m */; };
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* PhotoboothAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* PhotoboothAppDelegate.m */; };
+		364141F7126574D6004878AA /* beep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 364141F6126574D6004878AA /* beep.wav */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -46,6 +47,7 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		364141F6126574D6004878AA /* beep.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beep.wav; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Photobooth-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Photobooth-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* Photobooth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Photobooth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -129,6 +131,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				364141F6126574D6004878AA /* beep.wav */,
 				1C184BF012656F1B00C0709A /* film-leader-0.png */,
 				1C184BF112656F1B00C0709A /* film-leader-1.png */,
 				1C184BF212656F1B00C0709A /* film-leader-2.png */,
@@ -202,6 +205,7 @@
 				1C184BF512656F1B00C0709A /* film-leader-1.png in Resources */,
 				1C184BF612656F1B00C0709A /* film-leader-2.png in Resources */,
 				1C184BF712656F1B00C0709A /* film-leader-3.png in Resources */,
+				364141F7126574D6004878AA /* beep.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

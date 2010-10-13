@@ -21,9 +21,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="78"/>
-			<integer value="650"/>
 			<integer value="664"/>
+			<integer value="24"/>
+			<integer value="372"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -399,7 +399,7 @@
 							<string key="NSFrame">{{0, 198}, {1006, 589}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<bool key="NSViewIsLayerTreeHost">YES</bool>
-							<float key="zoomFactor">0.38374999165534973</float>
+							<float key="zoomFactor">0.36812499165534973</float>
 							<float key="rotationAngle">0.0</float>
 							<string key="currentToolMode">IKToolModeNone</string>
 							<bool key="autoresizes">YES</bool>
@@ -456,32 +456,24 @@
 							<int key="NSvFlags">4386</int>
 							<object class="NSMutableArray" key="NSSubviews">
 								<bool key="EncodedWithXMLCoder">YES</bool>
-								<object class="NSButton" id="147695061">
+								<object class="NSButton" id="1003701710">
 									<reference key="NSNextResponder" ref="701369770"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{321, 9}, {363, 50}}</string>
 									<reference key="NSSuperview" ref="701369770"/>
 									<bool key="NSEnabled">YES</bool>
-									<object class="NSButtonCell" key="NSCell" id="785191281">
+									<object class="NSButtonCell" key="NSCell" id="633506578">
 										<int key="NSCellFlags">-2080244224</int>
 										<int key="NSCellFlags2">134217728</int>
 										<string key="NSContents">TAKE PICTURE (or hit SPACEBAR)</string>
 										<reference key="NSSupport" ref="521348954"/>
-										<reference key="NSControlView" ref="147695061"/>
+										<reference key="NSControlView" ref="1003701710"/>
 										<int key="NSButtonFlags">-2033434369</int>
 										<int key="NSButtonFlags2">66</int>
-										<object class="NSCustomResource" key="NSNormalImage">
-											<string key="NSClassName">NSImage</string>
-											<string key="NSResourceName">camera</string>
-										</object>
 										<string key="NSAlternateContents"/>
 										<string key="NSKeyEquivalent"/>
 										<int key="NSPeriodicDelay">400</int>
 										<int key="NSPeriodicInterval">75</int>
-										<object class="NSCustomResource" key="NSSound">
-											<string key="NSClassName">NSSound</string>
-											<string key="NSResourceName">Glass</string>
-										</object>
 									</object>
 								</object>
 								<object class="NSButton" id="913861524">
@@ -1218,7 +1210,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">takePicture:</string>
 						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="147695061"/>
+						<reference key="destination" ref="1003701710"/>
 					</object>
 					<int key="connectionID">755</int>
 				</object>
@@ -1521,7 +1513,7 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="913861524"/>
-							<reference ref="147695061"/>
+							<reference ref="1003701710"/>
 						</object>
 						<reference key="parent" ref="439893737"/>
 						<string key="objectName">Control Panel</string>
@@ -1718,17 +1710,17 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">753</int>
-						<reference key="object" ref="147695061"/>
+						<reference key="object" ref="1003701710"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="785191281"/>
+							<reference ref="633506578"/>
 						</object>
 						<reference key="parent" ref="701369770"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">754</int>
-						<reference key="object" ref="785191281"/>
-						<reference key="parent" ref="147695061"/>
+						<reference key="object" ref="633506578"/>
+						<reference key="parent" ref="1003701710"/>
 					</object>
 				</object>
 			</object>
@@ -1882,7 +1874,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{547, 180}, {254, 283}}</string>
+					<string>{{538, 763}, {125, 73}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{187, 434}, {243, 243}}</string>
@@ -1900,7 +1892,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{654, 239}, {194, 73}}</string>
+					<string>{{582, 763}, {147, 73}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>{{525, 802}, {197, 73}}</string>
@@ -1909,9 +1901,9 @@
 					<integer value="1"/>
 					<string>{74, 862}</string>
 					<string>{{6, 978}, {478, 20}}</string>
-					<string>{{-2, 68}, {1006, 787}}</string>
+					<string>{{0, 68}, {1006, 787}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{-2, 68}, {1006, 787}}</string>
+					<string>{{0, 68}, {1006, 787}}</string>
 					<integer value="1"/>
 					<string>{{33, 99}, {480, 360}}</string>
 					<string>{3.40282e+38, 3.40282e+38}</string>
@@ -2948,13 +2940,11 @@
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>NSMenuCheckmark</string>
 				<string>NSMenuMixedState</string>
-				<string>camera</string>
 			</object>
 			<object class="NSMutableArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>{9, 8}</string>
 				<string>{7, 2}</string>
-				<string>{512, 512}</string>
 			</object>
 		</object>
 	</data>
