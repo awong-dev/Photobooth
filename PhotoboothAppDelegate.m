@@ -71,7 +71,7 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   NSData* defaultPrintInfo = [preferences dataForKey:kPrintInfoPref];
   NSString* defaultImageDirectory =
       [preferences objectForKey:kImageDirectoryPref];
-  if (!defaultPrintInfo) {
+  if (defaultPrintInfo) {
     printInfo =
       [NSUnarchiver unarchiveObjectWithData:defaultPrintInfo];
   } else {
