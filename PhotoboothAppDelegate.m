@@ -55,8 +55,8 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   NSData* defaultPrintInfo = [preferences dataForKey:kPrintInfoPref];
   NSString* defaultImageDirectory =
       [preferences objectForKey:kImageDirectoryPref];
-  printInfo =
-      [NSUnarchiver unarchiveObjectWithData:defaultPrintInfo];
+  //printInfo =
+  //    [NSUnarchiver unarchiveObjectWithData:defaultPrintInfo];
   
   if (printInfo == nil) {
     printInfo = [NSPrintInfo sharedPrintInfo];
