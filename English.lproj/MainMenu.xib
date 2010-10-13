@@ -21,9 +21,9 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="372"/>
 			<integer value="78"/>
-			<integer value="665"/>
+			<integer value="650"/>
+			<integer value="664"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -396,10 +396,10 @@
 									<string>NSFilenamesPboardType</string>
 								</object>
 							</object>
-							<string key="NSFrame">{{0, 173}, {1006, 614}}</string>
+							<string key="NSFrame">{{0, 198}, {1006, 589}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<bool key="NSViewIsLayerTreeHost">YES</bool>
-							<float key="zoomFactor">0.39296874403953552</float>
+							<float key="zoomFactor">0.38374999165534973</float>
 							<float key="rotationAngle">0.0</float>
 							<string key="currentToolMode">IKToolModeNone</string>
 							<bool key="autoresizes">YES</bool>
@@ -456,16 +456,44 @@
 							<int key="NSvFlags">4386</int>
 							<object class="NSMutableArray" key="NSSubviews">
 								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSButton" id="147695061">
+									<reference key="NSNextResponder" ref="701369770"/>
+									<int key="NSvFlags">268</int>
+									<string key="NSFrame">{{321, 9}, {363, 50}}</string>
+									<reference key="NSSuperview" ref="701369770"/>
+									<bool key="NSEnabled">YES</bool>
+									<object class="NSButtonCell" key="NSCell" id="785191281">
+										<int key="NSCellFlags">-2080244224</int>
+										<int key="NSCellFlags2">134217728</int>
+										<string key="NSContents">TAKE PICTURE (or hit SPACEBAR)</string>
+										<reference key="NSSupport" ref="521348954"/>
+										<reference key="NSControlView" ref="147695061"/>
+										<int key="NSButtonFlags">-2033434369</int>
+										<int key="NSButtonFlags2">66</int>
+										<object class="NSCustomResource" key="NSNormalImage">
+											<string key="NSClassName">NSImage</string>
+											<string key="NSResourceName">camera</string>
+										</object>
+										<string key="NSAlternateContents"/>
+										<string key="NSKeyEquivalent"/>
+										<int key="NSPeriodicDelay">400</int>
+										<int key="NSPeriodicInterval">75</int>
+										<object class="NSCustomResource" key="NSSound">
+											<string key="NSClassName">NSSound</string>
+											<string key="NSResourceName">Glass</string>
+										</object>
+									</object>
+								</object>
 								<object class="NSButton" id="913861524">
 									<reference key="NSNextResponder" ref="701369770"/>
 									<int key="NSvFlags">301</int>
-									<string key="NSFrame">{{902, 3}, {96, 32}}</string>
+									<string key="NSFrame">{{832, 16}, {160, 32}}</string>
 									<reference key="NSSuperview" ref="701369770"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSButtonCell" key="NSCell" id="656467749">
 										<int key="NSCellFlags">67239424</int>
 										<int key="NSCellFlags2">134217728</int>
-										<string key="NSContents">Print</string>
+										<string key="NSContents">Print photo</string>
 										<object class="NSFont" key="NSSupport">
 											<string key="NSName">LucidaGrande-Bold</string>
 											<double key="NSSize">13</double>
@@ -480,38 +508,8 @@
 										<int key="NSPeriodicInterval">25</int>
 									</object>
 								</object>
-								<object class="NSButton" id="837888027">
-									<reference key="NSNextResponder" ref="701369770"/>
-									<int key="NSvFlags">301</int>
-									<string key="NSFrame">{{484, 1}, {39, 38}}</string>
-									<reference key="NSSuperview" ref="701369770"/>
-									<int key="NSViewLayerContentsRedrawPolicy">2</int>
-									<bool key="NSViewCanDrawConcurrently">YES</bool>
-									<bool key="NSEnabled">YES</bool>
-									<object class="NSButtonCell" key="NSCell" id="937621399">
-										<int key="NSCellFlags">-2080244224</int>
-										<int key="NSCellFlags2">0</int>
-										<string key="NSContents"/>
-										<object class="NSFont" key="NSSupport">
-											<string key="NSName">LucidaGrande</string>
-											<double key="NSSize">10</double>
-											<int key="NSfFlags">2843</int>
-										</object>
-										<reference key="NSControlView" ref="837888027"/>
-										<int key="NSButtonFlags">-2037645057</int>
-										<int key="NSButtonFlags2">135</int>
-										<object class="NSCustomResource" key="NSNormalImage">
-											<string key="NSClassName">NSImage</string>
-											<string key="NSResourceName">NSUser</string>
-										</object>
-										<string key="NSAlternateContents"/>
-										<string type="base64-UTF8" key="NSKeyEquivalent">IA</string>
-										<int key="NSPeriodicDelay">200</int>
-										<int key="NSPeriodicInterval">25</int>
-									</object>
-								</object>
 							</object>
-							<string key="NSFrame">{{0, 130}, {1006, 43}}</string>
+							<string key="NSFrame">{{0, 130}, {1006, 68}}</string>
 							<reference key="NSSuperview" ref="439893737"/>
 							<int key="NSViewLayerContentsRedrawPolicy">2</int>
 							<bool key="NSViewCanDrawConcurrently">YES</bool>
@@ -1073,14 +1071,6 @@
 					<int key="connectionID">609</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">takePicture:</string>
-						<reference key="source" ref="976324537"/>
-						<reference key="destination" ref="837888027"/>
-					</object>
-					<int key="connectionID">616</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">mainImage</string>
 						<reference key="source" ref="976324537"/>
@@ -1223,6 +1213,14 @@
 						<reference key="destination" ref="504310446"/>
 					</object>
 					<int key="connectionID">748</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">takePicture:</string>
+						<reference key="source" ref="976324537"/>
+						<reference key="destination" ref="147695061"/>
+					</object>
+					<int key="connectionID">755</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1522,26 +1520,11 @@
 						<reference key="object" ref="701369770"/>
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="837888027"/>
 							<reference ref="913861524"/>
+							<reference ref="147695061"/>
 						</object>
 						<reference key="parent" ref="439893737"/>
 						<string key="objectName">Control Panel</string>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">600</int>
-						<reference key="object" ref="837888027"/>
-						<object class="NSMutableArray" key="children">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="937621399"/>
-						</object>
-						<reference key="parent" ref="701369770"/>
-						<string key="objectName">TakePictureButton</string>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">601</int>
-						<reference key="object" ref="937621399"/>
-						<reference key="parent" ref="837888027"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">653</int>
@@ -1733,6 +1716,20 @@
 						<reference key="object" ref="504310446"/>
 						<reference key="parent" ref="720053764"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">753</int>
+						<reference key="object" ref="147695061"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="785191281"/>
+						</object>
+						<reference key="parent" ref="701369770"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">754</int>
+						<reference key="object" ref="785191281"/>
+						<reference key="parent" ref="147695061"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1810,8 +1807,6 @@
 					<string>58.ImportedFromIB2</string>
 					<string>598.IBPluginDependency</string>
 					<string>599.IBPluginDependency</string>
-					<string>600.IBPluginDependency</string>
-					<string>601.IBPluginDependency</string>
 					<string>650.IBPluginDependency</string>
 					<string>653.IBPluginDependency</string>
 					<string>654.IBPluginDependency</string>
@@ -1839,9 +1834,17 @@
 					<string>73.IBPluginDependency</string>
 					<string>73.ImportedFromIB2</string>
 					<string>737.IBPluginDependency</string>
+					<string>739.IBPluginDependency</string>
 					<string>74.IBPluginDependency</string>
 					<string>74.ImportedFromIB2</string>
+					<string>740.IBPluginDependency</string>
+					<string>741.IBPluginDependency</string>
+					<string>743.IBPluginDependency</string>
+					<string>744.IBPluginDependency</string>
+					<string>745.IBPluginDependency</string>
 					<string>747.IBPluginDependency</string>
+					<string>753.IBPluginDependency</string>
+					<string>754.IBPluginDependency</string>
 					<string>78.IBPluginDependency</string>
 					<string>78.ImportedFromIB2</string>
 					<string>81.IBEditorWindowLastContentRect</string>
@@ -1906,9 +1909,9 @@
 					<integer value="1"/>
 					<string>{74, 862}</string>
 					<string>{{6, 978}, {478, 20}}</string>
-					<string>{{90, 69}, {1006, 787}}</string>
+					<string>{{-2, 68}, {1006, 787}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{90, 69}, {1006, 787}}</string>
+					<string>{{-2, 68}, {1006, 787}}</string>
 					<integer value="1"/>
 					<string>{{33, 99}, {480, 360}}</string>
 					<string>{3.40282e+38, 3.40282e+38}</string>
@@ -1930,11 +1933,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>{{208, 571}, {632, 279}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{427, 571}, {632, 279}}</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{427, 571}, {632, 279}}</string>
+					<string>{{208, 571}, {632, 279}}</string>
 					<boolean value="NO"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1954,7 +1955,15 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
@@ -1982,7 +1991,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">748</int>
+			<int key="maxID">755</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2939,13 +2948,13 @@
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>NSMenuCheckmark</string>
 				<string>NSMenuMixedState</string>
-				<string>NSUser</string>
+				<string>camera</string>
 			</object>
 			<object class="NSMutableArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<string>{9, 8}</string>
 				<string>{7, 2}</string>
-				<string>{32, 32}</string>
+				<string>{512, 512}</string>
 			</object>
 		</object>
 	</data>
