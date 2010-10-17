@@ -16,6 +16,8 @@
 
 @synthesize window;
 @synthesize fullscreenWindow;
+@synthesize countdownWindow;
+@synthesize countdownView;
 @synthesize mainImage;
 @synthesize browserView;
 @synthesize statusText;
@@ -109,6 +111,7 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
   [self setSmilesFolder:defaultSmilesFolder];
   [self initializeMainImage];
   [self setUninitialized];
+  [self createCountdownUI];
 }
 
 
@@ -144,6 +147,7 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
 //  if (state != kReady) {
 //    return;
 //  }
+  [self showCountdownUI];
 
   // Do 3 second countdown.
   currentCount = 3;
@@ -187,30 +191,30 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
       NSLog(@"SmileCount: %d", smileCount);
       if (smileCount != 0)  {
         int i = rand() % smileCount;
-        [self updateMainImage:[smileList objectAtIndex:i] shouldZoom:NO];
+        [self updateCountdownImage:[smileList objectAtIndex:i] shouldZoom:NO];
       } else {
-        [self updateMainImage:self.countdownImage0 shouldZoom:NO];
+        [self updateCountdownImage:self.countdownImage0 shouldZoom:NO];
       }
     }
       
       break;
 
     case 1:
-      [self updateMainImage:self.countdownImage1 shouldZoom:NO];
+      [self updateCountdownImage:self.countdownImage1 shouldZoom:NO];
       [beepSound play];
       break;
 
     case 2:
-      [self updateMainImage:self.countdownImage2 shouldZoom:NO];
+      [self updateCountdownImage:self.countdownImage2 shouldZoom:NO];
       [beepSound play];
       break;
  
     case 3:
-      [self updateMainImage:self.countdownImage3 shouldZoom:NO];
+      [self updateCountdownImage:self.countdownImage3 shouldZoom:NO];
       [beepSound play];
       break;
   }
-  [mainImage setNeedsDisplay:YES];
+  [countdownView setNeedsDisplay:YES];
 }
 
 - (IBAction)print:(id)pId {
@@ -632,6 +636,7 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
   state = kReady;
   [statusText setStringValue:
       [[NSString alloc] initWithFormat:@"%@ Ready", deviceName]];  
+  [self hideCountdownUI];
 }
 
 - (void)setDownloadingText:(NSString*)filename {
@@ -661,6 +666,7 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
   } else {
     [self setUninitialized];
   }
+  [self hideCountdownUI];
 }
 
 - (void)updateMainImage:(ImageInfo*)info shouldZoom:(BOOL)zoom {
@@ -669,6 +675,64 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
     [mainImage zoomImageToFit: self]; 
   }
   [mainImage setNeedsDisplay:YES];
+}
+
+- (void)updateCountdownImage:(ImageInfo*)info shouldZoom:(BOOL)zoom {
+  NSImage *image = [[[NSImage alloc] initWithContentsOfURL:info.url] autorelease];
+//  if (zoom) {
+    [image setScalesWhenResized: YES];
+    [image setSize: [countdownView frame].size];
+//  }
+  [countdownView setImage:image];
+  [countdownView setNeedsDisplay:YES];
+}
+
+- (void)showCountdownUI {
+  // Capture the main display
+  if (CGDisplayCapture( kCGDirectMainDisplay ) != kCGErrorSuccess) {
+      NSLog( @"Couldn't capture the main display!" );
+      // Note: you'll probably want to display a proper error dialog here
+  }
+
+  [countdownWindow makeKeyAndOrderFront:nil];
+}
+
+- (void)createCountdownUI {
+    int windowLevel;
+    NSRect screenRect;
+
+    // Get the shielding window level
+    windowLevel = CGShieldingWindowLevel();
+	
+    // Get the screen rect of our main display
+    screenRect = [[NSScreen mainScreen] frame];
+	
+    // Put up a new window
+    countdownWindow = [[NSWindow alloc]
+      initWithContentRect:screenRect
+                styleMask:NSBorderlessWindowMask
+                  backing:NSBackingStoreBuffered
+                    defer:NO
+                   screen:[NSScreen mainScreen]];
+								
+    [countdownWindow setLevel:windowLevel];
+    [countdownWindow setBackgroundColor:[NSColor blackColor]];
+	
+	// Create countdown view and add it
+	countdownView = [[NSImageView alloc] initWithFrame: screenRect];
+	[countdownView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+	[countdownWindow setContentView:countdownView];
+}
+
+- (void)hideCountdownUI
+{
+  [countdownWindow orderOut:self];
+
+  // Capture the main display
+  if (CGDisplayRelease( kCGDirectMainDisplay ) != kCGErrorSuccess) {
+    NSLog( @"Couldn't release the main display!" );
+    // Note: you'll probably want to display a proper error dialog here
+  }
 }
 
 @end

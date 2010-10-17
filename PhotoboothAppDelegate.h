@@ -23,6 +23,8 @@ enum CaputreState {
   // UI Elements.
   NSWindow *window;
   NSWindow *fullscreenWindow;
+  NSWindow *countdownWindow;
+  NSImageView *countdowView;
   IKImageView* mainImage;
   IKImageBrowserView *browserView;
   NSTextField *statusText;
@@ -69,6 +71,8 @@ enum CaputreState {
 
 @property(retain, nonatomic) IBOutlet NSWindow *window;
 @property(retain, nonatomic) IBOutlet NSWindow *fullscreenWindow;
+@property(retain, nonatomic) IBOutlet NSWindow *countdownWindow;
+@property(retain, nonatomic) IBOutlet NSImageView *countdownView;
 @property(retain, nonatomic) IBOutlet IKImageView *mainImage;
 @property(retain, nonatomic) IBOutlet IKImageBrowserView *browserView;
 @property(retain, nonatomic) IBOutlet NSTextField *statusText;
@@ -138,6 +142,10 @@ enum CaputreState {
 - (void)setActiveCamera:(ICCameraDevice*)camera;
 - (void)snapshotWatchdog:(NSTimer*)timer;
 - (void)onCountdown:(NSTimer*)timer;
+- (void)createCountdownUI;
+- (void)showCountdownUI;
+- (void)hideCountdownUI;
 - (void)updateCountdownUI:(int)count;
 - (void)updateMainImage:(ImageInfo*)info shouldZoom:(BOOL)zoom;
+- (void)updateCountdownImage:(ImageInfo*)info shouldZoom:(BOOL)zoom;
 @end
