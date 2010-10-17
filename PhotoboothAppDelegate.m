@@ -22,20 +22,26 @@
 @synthesize printButton;
 
 @synthesize preferencesSheet;
-@synthesize selectedImagesDirectory;
+@synthesize selectedImagesFolder;
+@synthesize selectedSmilesFolder;
+@synthesize setImagesFolderButton;
+@synthesize setSmilesFolderButton;
 @synthesize deviceBrowserView;
 
-@synthesize imagesDirectory;
+@synthesize imagesFolder;
+@synthesize smilesFolder;
 @synthesize defaultImage;
 @synthesize countdownImage0;
 @synthesize countdownImage1;
 @synthesize countdownImage2;
 @synthesize countdownImage3;
 @synthesize imageList;
+@synthesize smileList;
 @synthesize beepSound;
 
 NSString* kPrintInfoPref = @"UserPrintInfoRaw";
-NSString* kImageDirectoryPref = @"UserImageDirectory";
+NSString* kImageFolderPref = @"UserImageDirectory";
+NSString* kSmilesFolderPref = @"UserSmileDirectory";
 
 - (BOOL)applicationShouldTerminateAfterLastWindowClosed: (NSApplication *)sender
 {
@@ -62,6 +68,7 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
       [[ImageInfo alloc] initWithPath:
         [[NSBundle mainBundle] pathForResource:@"film-leader-3" ofType:@"png"]];
     imageList = [[NSMutableArray alloc] init];
+    smileList = [[NSMutableArray alloc] init];
     printSheetDidEndSelector =
         @selector(printSheetDidEnd:returnCode:contextInfo:);
 	  beepSound = [NSSound soundNamed:@"beep.wav"];
@@ -73,8 +80,8 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   // Load preferences.
   preferences = [NSUserDefaults standardUserDefaults];  
   NSData* defaultPrintInfo = [preferences dataForKey:kPrintInfoPref];
-  NSString* defaultImageDirectory =
-      [preferences objectForKey:kImageDirectoryPref];
+  NSString* defaultImageFolder = [preferences objectForKey:kImageFolderPref];
+  NSString* defaultSmilesFolder = [preferences objectForKey:kSmilesFolderPref];
   if (defaultPrintInfo) {
     printInfo =
       [NSUnarchiver unarchiveObjectWithData:defaultPrintInfo];
@@ -88,14 +95,18 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   } else {
     [NSPrintInfo setSharedPrintInfo:printInfo]; 
   }
-  if (defaultImageDirectory == nil) {
+  if (defaultImageFolder == nil) {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSPicturesDirectory,
         NSUserDomainMask, YES);
-    defaultImageDirectory = [paths objectAtIndex:0];
+    defaultImageFolder = [paths objectAtIndex:0];
+  }
+  if (defaultSmilesFolder == nil) {
+    defaultSmilesFolder = @"";
   }
 
   // Setup the UI.
-  [self setImagesDirectory:defaultImageDirectory];
+  [self setImagesFolder:defaultImageFolder];
+  [self setSmilesFolder:defaultSmilesFolder];
   [self initializeMainImage];
   [self setUninitialized];
 }
@@ -147,21 +158,18 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 }
 
 - (IBAction)onCountdown:(NSTimer*)timer {
-  [self updateCountdownUI:currentCount - 1];
-  if (currentCount > 0) {
-    currentCount--;
-  } else {
+  [self updateCountdownUI:--currentCount];
+  if (currentCount <= 0) {
     [timer invalidate];
+    timer = nil;
+    state = kTakingPicture;    
     [activeCamera requestTakePicture];
-    state = kTakingPicture;
-    // TODO(ajwong): Setup watchdog timer that will close session and restart if
-    // download does not complete in 3 seconds.
     if (cameraResetWatchdog != nil) {
       [cameraResetWatchdog invalidate];
       cameraResetWatchdog = nil;
     }
     cameraResetWatchdog = [[NSTimer
-      scheduledTimerWithTimeInterval:2.0
+      scheduledTimerWithTimeInterval:4.0
                               target:self
                             selector:@selector(snapshotWatchdog:)
                             userInfo:nil
@@ -171,27 +179,36 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 }
 
 - (void)updateCountdownUI:(int)count {
-  NSLog(@"Count: %d", count);
   switch (count) {
     default:
     case 0:
-      [self updateMainImage:self.countdownImage0 shouldZoom:NO];
+    {
+      int smileCount = [smileList count];
+      NSLog(@"SmileCount: %d", smileCount);
+      if (smileCount != 0)  {
+        int i = rand() % smileCount;
+        [self updateMainImage:[smileList objectAtIndex:i] shouldZoom:NO];
+      } else {
+        [self updateMainImage:self.countdownImage0 shouldZoom:NO];
+      }
+    }
+      
       break;
 
     case 1:
       [self updateMainImage:self.countdownImage1 shouldZoom:NO];
-		  [beepSound play];
-		  break;
+      [beepSound play];
+      break;
 
     case 2:
       [self updateMainImage:self.countdownImage2 shouldZoom:NO];
-      		  [beepSound play];
-		  break;
-
+      [beepSound play];
+      break;
+ 
     case 3:
       [self updateMainImage:self.countdownImage3 shouldZoom:NO];
-      		  [beepSound play];
-		  break;
+      [beepSound play];
+      break;
   }
   [mainImage setNeedsDisplay:YES];
 }
@@ -226,7 +243,7 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
     [op setShowsPrintPanel:NO];
   }
   [op setJobTitle:
-      [[NSString alloc] initWithFormat:@"Photobotoh: %@", [[imageInfo url] path]]];  
+      [[NSString alloc] initWithFormat:@"Photobooth: %@", [[imageInfo url] path]]];  
   [op runOperationModalForWindow:window
                         delegate:self
                   didRunSelector:@selector(printOperationDidRun:success:contextInfo:)
@@ -338,7 +355,8 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 }
 
 - (IBAction)savePreferences:(id)pId {
-  [self setImagesDirectory:[selectedImagesDirectory stringValue]];
+  [self setImagesFolder:[selectedImagesFolder stringValue]];
+  [self setSmilesFolder:[selectedSmilesFolder stringValue]];
   [preferencesSheet orderOut:nil];
   [NSApp endSheet:preferencesSheet];
   activeCamera = [(ICCameraDevice*)[deviceBrowserView selectedDevice] retain];
@@ -355,7 +373,11 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   [panel setCanChooseDirectories:YES];
   [panel beginWithCompletionHandler: ^ (NSInteger result) {
     if (result == NSFileHandlingPanelOKButton) {
-      [selectedImagesDirectory setStringValue:[panel filename]];
+      if (pId == setImagesFolderButton) {
+        [selectedImagesFolder setStringValue:[panel filename]];
+      } else if (pId == setSmilesFolderButton) {
+        [selectedSmilesFolder setStringValue:[panel filename]];
+      }
     }
   }];
 }
@@ -387,27 +409,42 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   }
 }
 
-
 //
 // ------ Public API -------
 //
-- (void)setImagesDirectory:(NSString*) path {
-  if ([imagesDirectory isEqual:path]) {
+- (void)setImagesFolder:(NSString*) path {
+  if ([imagesFolder isEqual:path]) {
     return;
   }
   // We write our own setting becaus we want to always update the labels when
   // we set this path.
-  [imagesDirectory release];
-  imagesDirectory = path;
-  [imagesDirectory retain];
+  [imagesFolder release];
+  imagesFolder = path;
+  [imagesFolder retain];
 
-  [preferences setObject:imagesDirectory forKey:kImageDirectoryPref];
+  [preferences setObject:imagesFolder forKey:kImageFolderPref];
   [preferences synchronize];
   
-  [selectedImagesDirectory setStringValue:imagesDirectory];
+  [selectedImagesFolder setStringValue:imagesFolder];
   [self rescanImagesDirectory];
 };
 
+- (void)setSmilesFolder:(NSString*) path {
+  if ([smilesFolder isEqual:path]) {
+    return;
+  }
+  // We write our own setting becaus we want to always update the labels when
+  // we set this path.
+  [smilesFolder release];
+  smilesFolder = path;
+  [smilesFolder retain];
+  
+  [preferences setObject:smilesFolder forKey:kSmilesFolderPref];
+  [preferences synchronize];
+  
+  [selectedSmilesFolder setStringValue:smilesFolder];
+  [self rescanSmilesFolder];
+};
 
 //
 // ------ Internal functions -------
@@ -423,7 +460,6 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 }
 
 - (void)initializeBrowseList {
-  [self addImagesWithPath:imagesDirectory];
   [browserView setZoomValue:1.0f];
   [browserView setContentResizingMask:NSViewWidthSizable];  // Don't grow veritcally.
   [browserView setAllowsMultipleSelection:NO];
@@ -432,31 +468,40 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
 
 - (void)rescanImagesDirectory {
   [imageList removeAllObjects];
-  [self addImagesWithPath:imagesDirectory];
+  [self addImagesWithPath:imagesFolder to:imageList];
   [self initializeBrowseList];
 }
 
-- (void)addImagesWithPath:(NSString*)path {
+- (void)rescanSmilesFolder {
+  NSLog(@"Scanning: %@", smilesFolder);
+  if (![smilesFolder isEqual: @""]) {
+    [smileList removeAllObjects];
+    [self addImagesWithPath:smilesFolder to:smileList];
+  }
+}
+
+- (void)addImagesWithPath:(NSString*)path to:(NSMutableArray*)targetList {
   NSFileManager *localFileManager = [[[NSFileManager alloc] init] autorelease];
   NSDirectoryEnumerator *dirEnum =
-    [localFileManager enumeratorAtPath:imagesDirectory];
+    [localFileManager enumeratorAtPath:path];
 
   NSString *file;
   while (file = [dirEnum nextObject]) {
     NSString* extension = [file pathExtension];
     if ([extension caseInsensitiveCompare:@"jpg"] == NSOrderedSame ||
         [extension caseInsensitiveCompare:@"png"] == NSOrderedSame) {
-      [self addAnImageWithPath:[imagesDirectory stringByAppendingPathComponent:file]];
+      [self addAnImageWithPath:[path stringByAppendingPathComponent:file]
+                            to:targetList];
     }
   }
 }
 
-- (void)addAnImageWithPath:(NSString *) path
+- (void)addAnImageWithPath:(NSString *)path to:(NSMutableArray*)targetList
 {
   ImageInfo *imageInfo;
 
   imageInfo = [[[ImageInfo alloc] initWithPath:path] autorelease];
-  [imageList addObject:imageInfo];
+  [targetList addObject:imageInfo];
 }
 
 
@@ -526,8 +571,8 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
                 options:(NSDictionary*)options
             contextInfo:(void*)contextInfo {
   NSString* filename = [options objectForKey:ICSavedFilename];
-  [self addAnImageWithPath:[
-      imagesDirectory stringByAppendingPathComponent:filename]];
+  [self addAnImageWithPath:[imagesFolder stringByAppendingPathComponent:filename]
+                        to:imageList];
   [browserView reloadData];
   [self imageBrowserSelectionDidChange:browserView];
   
@@ -555,7 +600,7 @@ NSString* kImageDirectoryPref = @"UserImageDirectory";
   // Download it if it's an image.
   if ([[item UTI] isEqualToString:(NSString*)kUTTypeImage]) {
     NSDictionary* downloadOptions = [NSDictionary
-      dictionaryWithObject:[NSURL fileURLWithPath:imagesDirectory]
+      dictionaryWithObject:[NSURL fileURLWithPath:imagesFolder]
                     forKey:ICDownloadsDirectoryURL];
 
     [camera requestDownloadFile:(ICCameraFile*)item

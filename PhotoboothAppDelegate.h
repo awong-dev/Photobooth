@@ -30,7 +30,10 @@ enum CaputreState {
 
   // Preferences Sheet Elements.
   NSWindow *preferencesSheet;
-  NSTextField *selectedImagesDirectory;
+  NSTextField *selectedImagesFolder;
+  NSTextField *selectedSmilesFolder;
+  NSButton *setImagesFolderButton;
+  NSButton *setSmilesFolderButton;
   IKDeviceBrowserView *deviceBrowserView;
 
   // Stock images.
@@ -39,13 +42,15 @@ enum CaputreState {
   ImageInfo* countdownImage1;
   ImageInfo* countdownImage2;
   ImageInfo* countdownImage3;
+  NSMutableArray* smileList;
 	
   // Stock sounds.
 	NSSound *beepSound;
 
   // Controller state.
   NSRect originalFrame;
-  NSString* imagesDirectory;
+  NSString* imagesFolder;
+  NSString* smileDirectory;
   NSMutableArray* imageList;  // Holds images from oldest to most recent.
   enum CaputreState state;
   NSUserDefaults* preferences;
@@ -71,16 +76,21 @@ enum CaputreState {
 
 // Preferences sheet stuff.
 @property(retain, nonatomic) IBOutlet NSWindow *preferencesSheet;
-@property(retain, nonatomic) IBOutlet NSTextField *selectedImagesDirectory;
+@property(retain, nonatomic) IBOutlet NSTextField *selectedImagesFolder;
+@property(retain, nonatomic) IBOutlet NSTextField *selectedSmilesFolder;
+@property(retain, nonatomic) IBOutlet NSButton* setImagesFolderButton;
+@property(retain, nonatomic) IBOutlet NSButton* setSmilesFolderButton;
 @property(retain, nonatomic) IBOutlet IKDeviceBrowserView *deviceBrowserView;
 
-@property(readonly, retain, nonatomic) NSString* imagesDirectory;
+@property(readonly, retain, nonatomic) NSString* imagesFolder;
+@property(readonly, retain, nonatomic) NSString* smilesFolder;
 @property(retain, nonatomic) ImageInfo* defaultImage;
 @property(retain, nonatomic) ImageInfo* countdownImage0;
 @property(retain, nonatomic) ImageInfo* countdownImage1;
 @property(retain, nonatomic) ImageInfo* countdownImage2;
 @property(retain, nonatomic) ImageInfo* countdownImage3;
 @property(retain, nonatomic) NSMutableArray* imageList;
+@property(retain, nonatomic) NSMutableArray* smileList;
 @property(retain, nonatomic) NSSound* beepSound;
 
 // UI Actions.
@@ -112,14 +122,16 @@ enum CaputreState {
 - (void)deviceBrowser:(ICDeviceBrowser*)browser didRemoveDevice:(ICDevice*)device moreGoing:(BOOL)moreGoing;
 
 // Public API.
-- (void)setImagesDirectory:(NSString*)path;
+- (void)setImagesFolder:(NSString*)path;
+- (void)setSmilesFolder:(NSString*)path;
 
 // Internal functions.
 - (void)initializeMainImage;
 - (void)initializeBrowseList;
 - (void)rescanImagesDirectory;
-- (void)addImagesWithPath:(NSString*)path;
-- (void)addAnImageWithPath:(NSString*)path;
+- (void)rescanSmilesFolder;
+- (void)addImagesWithPath:(NSString*)path to:(NSMutableArray*)targetList;
+- (void)addAnImageWithPath:(NSString*)path to:(NSMutableArray*)targetList;
 - (void)setReadyText:(NSString*)deviceName;
 - (void)setDownloadingText:(NSString*)filename;
 - (void)setUninitialized;
