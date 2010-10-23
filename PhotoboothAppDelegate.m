@@ -18,6 +18,7 @@
 @synthesize fullscreenWindow;
 @synthesize countdownWindow;
 @synthesize countdownView;
+@synthesize countdownStatus;
 @synthesize mainImage;
 @synthesize browserView;
 @synthesize statusText;
@@ -37,6 +38,7 @@
 @synthesize countdownImage1;
 @synthesize countdownImage2;
 @synthesize countdownImage3;
+@synthesize countdownImageN1;
 @synthesize imageList;
 @synthesize smileList;
 @synthesize beepSound;
@@ -69,6 +71,9 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
     self.countdownImage3 = 
       [[ImageInfo alloc] initWithPath:
         [[NSBundle mainBundle] pathForResource:@"film-leader-3" ofType:@"png"]];
+    self.countdownImageN1 = 
+      [[ImageInfo alloc] initWithPath:
+        [[NSBundle mainBundle] pathForResource:@"film-leader--1" ofType:@"png"]];    
     imageList = [[NSMutableArray alloc] init];
     smileList = [[NSMutableArray alloc] init];
     printSheetDidEndSelector =
@@ -144,46 +149,65 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
 // ------ UI Actions -------
 //
 - (IBAction)takePicture:(id)pId {
-//  if (state != kReady) {
-//    return;
-//  }
   [self showCountdownUI];
 
   // Do 3 second countdown.
   currentCount = 3;
   [self updateCountdownUI:currentCount];
-  cameraResetWatchdog = [[NSTimer
-                         scheduledTimerWithTimeInterval:1.0
-                                                 target:self
-                                               selector:@selector(onCountdown:)
-                                               userInfo:nil
-                                                repeats:YES]
-                         retain];
+  [NSTimer
+    scheduledTimerWithTimeInterval:1.0
+                            target:self
+                          selector:@selector(onCountdown:)
+                          userInfo:nil
+                           repeats:YES];
 }
 
 - (IBAction)onCountdown:(NSTimer*)timer {
   [self updateCountdownUI:--currentCount];
-  if (currentCount <= 0) {
+  if (currentCount == 1) {
+    snapsLeft = 3;
+    [NSTimer scheduledTimerWithTimeInterval:1.2
+                                     target:self
+                                   selector:@selector(onSnapTimer:)
+                                   userInfo:nil
+                                    repeats:NO];
+  } else if (currentCount <= -1) {
     [timer invalidate];
     timer = nil;
-    state = kTakingPicture;    
-    [activeCamera requestTakePicture];
-    if (cameraResetWatchdog != nil) {
-      [cameraResetWatchdog invalidate];
-      cameraResetWatchdog = nil;
-    }
-    cameraResetWatchdog = [[NSTimer
-      scheduledTimerWithTimeInterval:4.0
-                              target:self
-                            selector:@selector(snapshotWatchdog:)
-                            userInfo:nil
-                             repeats:NO]
-                             retain];
   }
 }
 
+- (void)onSnapTimer:(NSTimer*)timer {
+  if (snapsLeft > 0) {
+    snapsLeft--;
+    [self snapCamera];
+  }
+}
+
+- (void)snapCamera {
+  state = kTakingPicture;    
+  [activeCamera requestTakePicture];
+  if (cameraResetWatchdog != nil) {
+    [cameraResetWatchdog invalidate];
+    [cameraResetWatchdog release];
+    cameraResetWatchdog = nil;
+  }
+  cameraResetWatchdog = [[NSTimer
+    scheduledTimerWithTimeInterval:4.0
+                            target:self
+                          selector:@selector(snapshotWatchdog:)
+                          userInfo:nil
+                           repeats:NO]
+                           retain];
+}
+
+
 - (void)updateCountdownUI:(int)count {
-  switch (count) {
+  switch (count) {      
+    case -1:
+      [self updateCountdownImage:self.countdownImageN1 shouldZoom:NO];
+      break;      
+
     default:
     case 0:
     {
@@ -585,7 +609,16 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
   NSIndexSet* selectFirst = [[NSIndexSet alloc] initWithIndex:0];
   [browserView setSelectionIndexes:selectFirst byExtendingSelection:NO];  
   
-  [self setReadyText: [[file device] name]];
+  [self setReadyText:[[file device] name]];
+  [cameraResetWatchdog invalidate];
+  [cameraResetWatchdog release];
+  cameraResetWatchdog = nil;
+  NSLog(@"Snaps left %d\n", snapsLeft);
+  if (snapsLeft > 0) {
+    [self onSnapTimer:nil];
+  } else {
+    [self hideCountdownUI];
+  }
 }
 
 - (void)cameraDevice:(ICCameraDevice*)camera didAddItem:(ICCameraItem*)item {
@@ -636,7 +669,6 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
   state = kReady;
   [statusText setStringValue:
       [[NSString alloc] initWithFormat:@"%@ Ready", deviceName]];  
-  [self hideCountdownUI];
 }
 
 - (void)setDownloadingText:(NSString*)filename {
@@ -698,30 +730,33 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
 }
 
 - (void)createCountdownUI {
-    int windowLevel;
-    NSRect screenRect;
+  int windowLevel;
+  NSRect screenRect;
 
-    // Get the shielding window level
-    windowLevel = CGShieldingWindowLevel();
-	
-    // Get the screen rect of our main display
-    screenRect = [[NSScreen mainScreen] frame];
-	
-    // Put up a new window
-    countdownWindow = [[NSWindow alloc]
-      initWithContentRect:screenRect
-                styleMask:NSBorderlessWindowMask
-                  backing:NSBackingStoreBuffered
-                    defer:NO
-                   screen:[NSScreen mainScreen]];
-								
-    [countdownWindow setLevel:windowLevel];
-    [countdownWindow setBackgroundColor:[NSColor blackColor]];
-	
-	// Create countdown view and add it
-	countdownView = [[NSImageView alloc] initWithFrame: screenRect];
-	[countdownView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
-	[countdownWindow setContentView:countdownView];
+  // Get the shielding window level
+  windowLevel = CGShieldingWindowLevel();
+   
+  // Get the screen rect of our main display
+  screenRect = [[NSScreen mainScreen] frame];
+   
+  // Put up a new window
+  countdownWindow = [[NSWindow alloc]
+    initWithContentRect:screenRect
+              styleMask:NSBorderlessWindowMask
+                backing:NSBackingStoreBuffered
+                  defer:NO
+                 screen:[NSScreen mainScreen]];
+                                      
+  [countdownWindow setLevel:windowLevel];
+  [countdownWindow setBackgroundColor:[NSColor blackColor]];
+   
+  // Create countdown view and add it
+  countdownView = [[NSImageView alloc] initWithFrame: screenRect];
+  [countdownView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+  [countdownWindow setContentView:countdownView];
+
+  // Add a text overlay for messages.
+  countdownStatus = [[NSTextField alloc] initWithFrame: screenRect];
 }
 
 - (void)hideCountdownUI

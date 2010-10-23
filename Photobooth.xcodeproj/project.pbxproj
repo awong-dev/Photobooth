@@ -16,6 +16,7 @@
 		1C4F0C0811FCB90F0082EC5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C4F0C0711FCB90F0082EC5D /* QuartzCore.framework */; };
 		1C9FF5581262680600B903C9 /* camera.icns in Resources */ = {isa = PBXBuildFile; fileRef = 1C9FF5561262680600B903C9 /* camera.icns */; };
 		1C9FF5591262680600B903C9 /* camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 1C9FF5571262680600B903C9 /* camera.png */; };
+		1CB894461272C1BD00E506BE /* film-leader--1.png in Resources */ = {isa = PBXBuildFile; fileRef = 1CB894451272C1BD00E506BE /* film-leader--1.png */; };
 		1CB8C6F91259291400DD851D /* ImageInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB8C6F81259291400DD851D /* ImageInfo.m */; };
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
 		256AC3DA0F4B6AC300CF3369 /* PhotoboothAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 256AC3D90F4B6AC300CF3369 /* PhotoboothAppDelegate.m */; };
@@ -38,6 +39,7 @@
 		1C4F0C0711FCB90F0082EC5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1C9FF5561262680600B903C9 /* camera.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = camera.icns; sourceTree = "<group>"; };
 		1C9FF5571262680600B903C9 /* camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camera.png; sourceTree = "<group>"; };
+		1CB894451272C1BD00E506BE /* film-leader--1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "film-leader--1.png"; sourceTree = "<group>"; };
 		1CB8C6F71259291400DD851D /* ImageInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageInfo.h; sourceTree = "<group>"; };
 		1CB8C6F81259291400DD851D /* ImageInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageInfo.m; sourceTree = "<group>"; };
 		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1CB894451272C1BD00E506BE /* film-leader--1.png */,
 				364141F6126574D6004878AA /* beep.wav */,
 				1C184BF012656F1B00C0709A /* film-leader-0.png */,
 				1C184BF112656F1B00C0709A /* film-leader-1.png */,
@@ -206,6 +209,7 @@
 				1C184BF612656F1B00C0709A /* film-leader-2.png in Resources */,
 				1C184BF712656F1B00C0709A /* film-leader-3.png in Resources */,
 				364141F7126574D6004878AA /* beep.wav in Resources */,
+				1CB894461272C1BD00E506BE /* film-leader--1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

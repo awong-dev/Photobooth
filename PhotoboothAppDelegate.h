@@ -24,7 +24,8 @@ enum CaputreState {
   NSWindow *window;
   NSWindow *fullscreenWindow;
   NSWindow *countdownWindow;
-  NSImageView *countdowView;
+  NSImageView *countdownView;
+  NSTextField *countdownStatus;
   IKImageView* mainImage;
   IKImageBrowserView *browserView;
   NSTextField *statusText;
@@ -44,10 +45,11 @@ enum CaputreState {
   ImageInfo* countdownImage1;
   ImageInfo* countdownImage2;
   ImageInfo* countdownImage3;
+  ImageInfo* countdownImageN1;
   NSMutableArray* smileList;
 	
   // Stock sounds.
-	NSSound *beepSound;
+  NSSound *beepSound;
 
   // Controller state.
   NSRect originalFrame;
@@ -59,9 +61,11 @@ enum CaputreState {
   SEL printSheetDidEndSelector;
   NSPrintInfo *printInfo;
   NSTimer* cameraResetWatchdog;  // Resets to ready if camera doesn't snap.
-  NSTimer* countdownTimer;  // Timer for executing the countdown.
+  NSTimer* countdownTimer;   // Timer for executing the countdown.
+  NSTimer* tripleSnapTimer;  // Timer for executing 3 pictures.
   int currentCount;  // Used during the count-down to taking a picture.
                      // Snapshot happens at 0.
+  int snapsLeft;  // How many snapshots left in the current command.
   
   // Camera search state.
   ICDeviceBrowser* deviceBrowser;
@@ -73,6 +77,7 @@ enum CaputreState {
 @property(retain, nonatomic) IBOutlet NSWindow *fullscreenWindow;
 @property(retain, nonatomic) IBOutlet NSWindow *countdownWindow;
 @property(retain, nonatomic) IBOutlet NSImageView *countdownView;
+@property(retain, nonatomic) IBOutlet NSTextField *countdownStatus;
 @property(retain, nonatomic) IBOutlet IKImageView *mainImage;
 @property(retain, nonatomic) IBOutlet IKImageBrowserView *browserView;
 @property(retain, nonatomic) IBOutlet NSTextField *statusText;
@@ -93,6 +98,7 @@ enum CaputreState {
 @property(retain, nonatomic) ImageInfo* countdownImage1;
 @property(retain, nonatomic) ImageInfo* countdownImage2;
 @property(retain, nonatomic) ImageInfo* countdownImage3;
+@property(retain, nonatomic) ImageInfo* countdownImageN1;
 @property(retain, nonatomic) NSMutableArray* imageList;
 @property(retain, nonatomic) NSMutableArray* smileList;
 @property(retain, nonatomic) NSSound* beepSound;
@@ -140,6 +146,8 @@ enum CaputreState {
 - (void)setDownloadingText:(NSString*)filename;
 - (void)setUninitialized;
 - (void)setActiveCamera:(ICCameraDevice*)camera;
+
+// Countdown functions.
 - (void)snapshotWatchdog:(NSTimer*)timer;
 - (void)onCountdown:(NSTimer*)timer;
 - (void)createCountdownUI;
@@ -148,4 +156,6 @@ enum CaputreState {
 - (void)updateCountdownUI:(int)count;
 - (void)updateMainImage:(ImageInfo*)info shouldZoom:(BOOL)zoom;
 - (void)updateCountdownImage:(ImageInfo*)info shouldZoom:(BOOL)zoom;
+- (void)snapCamera;
+- (void)onSnapTimer:(NSTimer*) timer;
 @end
