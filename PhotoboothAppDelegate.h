@@ -26,6 +26,8 @@ enum CaputreState {
   NSWindow *countdownWindow;
   NSImageView *countdownView;
   NSTextField *countdownStatus;
+  NSImage* overlayImage;
+  NSImageView* overlayView;
   IKImageView* mainImage;
   IKImageBrowserView *browserView;
   NSTextField *statusText;
@@ -99,6 +101,8 @@ enum CaputreState {
 @property(retain, nonatomic) ImageInfo* countdownImage2;
 @property(retain, nonatomic) ImageInfo* countdownImage3;
 @property(retain, nonatomic) ImageInfo* countdownImageN1;
+@property(retain, nonatomic) NSImage* overlayImage;
+@property(retain, nonatomic) NSImageView* overlayView;
 @property(retain, nonatomic) NSMutableArray* imageList;
 @property(retain, nonatomic) NSMutableArray* smileList;
 @property(retain, nonatomic) NSSound* beepSound;
@@ -155,7 +159,7 @@ enum CaputreState {
 - (void)hideCountdownUI;
 - (void)updateCountdownUI:(int)count;
 - (void)updateMainImage:(ImageInfo*)info shouldZoom:(BOOL)zoom;
-- (void)updateCountdownImage:(ImageInfo*)info shouldZoom:(BOOL)zoom;
+- (void)updateCountdownImage:(ImageInfo*)info overlayCountMessage:(BOOL)zoom;
 - (void)snapCamera;
 - (void)onSnapTimer:(NSTimer*) timer;
 @end

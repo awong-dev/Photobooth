@@ -19,6 +19,8 @@
 @synthesize countdownWindow;
 @synthesize countdownView;
 @synthesize countdownStatus;
+@synthesize overlayImage;
+@synthesize overlayView;
 @synthesize mainImage;
 @synthesize browserView;
 @synthesize statusText;
@@ -95,6 +97,8 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
   } else {
     printInfo = nil;
   }
+  
+  srand(time(NULL));
 
   if (printInfo == nil) {
     printInfo = [NSPrintInfo sharedPrintInfo];
@@ -171,7 +175,7 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
                                    selector:@selector(onSnapTimer:)
                                    userInfo:nil
                                     repeats:NO];
-  } else if (currentCount <= -1) {
+  } else if (currentCount <= 0) {
     [timer invalidate];
     timer = nil;
   }
@@ -205,7 +209,7 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
 - (void)updateCountdownUI:(int)count {
   switch (count) {      
     case -1:
-      [self updateCountdownImage:self.countdownImageN1 shouldZoom:NO];
+      [self updateCountdownImage:self.countdownImageN1 overlayCountMessage:NO];
       break;
 
     default:
@@ -215,26 +219,26 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
       NSLog(@"SmileCount: %d", smileCount);
       if (smileCount != 0)  {
         int i = rand() % smileCount;
-        [self updateCountdownImage:[smileList objectAtIndex:i] shouldZoom:NO];
+        [self updateCountdownImage:[smileList objectAtIndex:i] overlayCountMessage:YES];
       } else {
-        [self updateCountdownImage:self.countdownImageN1 shouldZoom:NO];
+        [self updateCountdownImage:self.countdownImageN1 overlayCountMessage:NO];
       }
     }
       
       break;
 
     case 1:
-      [self updateCountdownImage:self.countdownImage1 shouldZoom:NO];
+      [self updateCountdownImage:self.countdownImage1 overlayCountMessage:NO];
       [beepSound play];
       break;
 
     case 2:
-      [self updateCountdownImage:self.countdownImage2 shouldZoom:NO];
+      [self updateCountdownImage:self.countdownImage2 overlayCountMessage:NO];
       [beepSound play];
       break;
  
     case 3:
-      [self updateCountdownImage:self.countdownImage3 shouldZoom:NO];
+      [self updateCountdownImage:self.countdownImage3 overlayCountMessage:NO];
       [beepSound play];
       break;
   }
@@ -713,14 +717,27 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
   [mainImage setNeedsDisplay:YES];
 }
 
-- (void)updateCountdownImage:(ImageInfo*)info shouldZoom:(BOOL)zoom {
+- (void)updateCountdownImage:(ImageInfo*)info overlayCountMessage:(BOOL)should_overlay {
   NSImage *image = [[[NSImage alloc] initWithContentsOfURL:info.url] autorelease];
-//  if (zoom) {
-    [image setScalesWhenResized: YES];
-    [image setSize: [countdownView frame].size];
-//  }
+  if (should_overlay) {
+    /*
+    NSImage *overlay = [[[NSImage alloc] initWithContentsOfURL:self.countdownImageN1.url] autorelease];
+    [image drawInRect:location fromRect:source_clip operation:NSCompositeSourceOver  fraction:0.5];
+    
+    [image lockFocus];
+    NSString *string = [NSString stringWithString:@"Text\nMore Text"];
+    [string drawInRect:NSMakeRect(90, 60, 200, 45)
+        withAttributes:nil];
+    [image unlockFocus];
+          */
+  }
+  [image setScalesWhenResized: YES];
+  [image setSize: [countdownView frame].size];
   [countdownView setImage:image];
   [countdownView setNeedsDisplay:YES];
+  if (should_overlay) {
+    [overlayView setHidden:NO];
+  }
 }
 
 - (void)showCountdownUI {
@@ -761,12 +778,28 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
 
   // Add a text overlay for messages.
   countdownStatus = [[NSTextField alloc] initWithFrame: screenRect];
+  
+  NSImage *i = 
+  [[[NSImage alloc]
+   initWithContentsOfFile:[[NSBundle mainBundle]
+                           pathForResource:@"look_at_camera_overlay"
+                           ofType:@"png"]] autorelease];
+  [self setOverlayImage:i];
+  [overlayImage setSize:NSMakeSize(1820, 163)];
+  [overlayImage setScalesWhenResized: YES];
+  NSRect overlay_frame = NSMakeRect(0, 0, screenRect.size.width, 163);
+  overlayView = [[NSImageView alloc] initWithFrame:overlay_frame];
+  [overlayView setImage:overlayImage];
+  [overlayView setAlphaValue:0.8];
+  [countdownView addSubview:overlayView];
+  [overlayView setHidden:YES];
 }
 
 - (void)hideCountdownUI
 {
-  [self updateCountdownImage:self.countdownImage0 shouldZoom:NO];  
+  [self updateCountdownImage:self.countdownImage0 overlayCountMessage:NO];  
   [countdownWindow orderOut:self];
+  [overlayView setHidden:YES];
 
   // Capture the main display
   if (CGDisplayRelease( kCGDirectMainDisplay ) != kCGErrorSuccess) {
