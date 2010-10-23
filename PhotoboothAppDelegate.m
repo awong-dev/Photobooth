@@ -206,7 +206,7 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
   switch (count) {      
     case -1:
       [self updateCountdownImage:self.countdownImageN1 shouldZoom:NO];
-      break;      
+      break;
 
     default:
     case 0:
@@ -217,7 +217,7 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
         int i = rand() % smileCount;
         [self updateCountdownImage:[smileList objectAtIndex:i] shouldZoom:NO];
       } else {
-        [self updateCountdownImage:self.countdownImage0 shouldZoom:NO];
+        [self updateCountdownImage:self.countdownImageN1 shouldZoom:NO];
       }
     }
       
@@ -615,7 +615,11 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
   cameraResetWatchdog = nil;
   NSLog(@"Snaps left %d\n", snapsLeft);
   if (snapsLeft > 0) {
-    [self onSnapTimer:nil];
+    [NSTimer scheduledTimerWithTimeInterval:0.2
+                                     target:self
+                                   selector:@selector(onSnapTimer:)
+                                   userInfo:nil
+                                    repeats:NO];
   } else {
     [self hideCountdownUI];
   }
@@ -761,6 +765,7 @@ NSString* kSmilesFolderPref = @"UserSmileDirectory";
 
 - (void)hideCountdownUI
 {
+  [self updateCountdownImage:self.countdownImage0 shouldZoom:NO];  
   [countdownWindow orderOut:self];
 
   // Capture the main display
